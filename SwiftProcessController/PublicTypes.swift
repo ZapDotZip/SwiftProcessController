@@ -12,4 +12,3 @@ public enum ProcessControllerError: Error {
 	case couldNotDecodeStringOutput
 	case couldNotDecodeJSON(String, String)
 }
-

@@ -29,7 +29,8 @@ final class SPCRunnerTests: XCTestCase {
 		XCTAssertEqual(resTrue.outputString(), "")
 		XCTAssertEqual(resTrue.errorString(), "")
 		XCTAssertEqual(resTrue.exitStatus, 0)
-		let runFalse = Runner(executablePath: "/usr/bin/false")
+		let url = URL(fileURLWithPath: "/usr/bin/false")
+		let runFalse = Runner(executableURL: url)
 		let resFalse = try runFalse.run(args: [], env: nil)
 		XCTAssertEqual(resFalse.exitStatus, 1)
 	}
@@ -67,6 +68,20 @@ final class SPCRunnerTests: XCTestCase {
 		let env: [String : String] = ["TESTING_CUSTOM_ENV" : "custom enviorment variable"]
 		let res = try run.run(args: ["TESTING_CUSTOM_ENV"], env: env)
 		XCTAssertEqual(res.outputString(), "custom enviorment variable\n")
+	}
+	
+	func testJSONReturnType() throws {
+		struct decodableJSON: Codable, Equatable {
+			let str: String
+			let number: Int
+			let fun_number: Double
+			let dict: [String : String]
+			let arr: [Bool]
+		}
+		let sample_output = decodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test\nmultiline\nstring"], arr: [true, false, true, true, false])
+		let run = Runner(executablePath: "/bin/echo")
+		let res = try run.run(args: [String(data: JSONEncoder().encode(sample_output), encoding: .utf8)!], env: nil, returning: decodableJSON.self)
+		XCTAssertEqual(res.output, sample_output)
 	}
 	
 }

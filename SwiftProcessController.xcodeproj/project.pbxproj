@@ -11,6 +11,7 @@
 		ED5165792DEF7A0F00D54348 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* Runner.swift */; };
 		ED7D6BE02DF23DFB000DDEAF /* SPCRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* SPCRunnerTests.swift */; };
 		ED7D6BE12DF23DFB000DDEAF /* SwiftProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* SwiftProcessControllerTests.swift */; };
+		ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */; };
 		EDB4184C2DEF759A005DF93C /* SwiftProcessController.docc in Sources */ = {isa = PBXBuildFile; fileRef = EDB418482DEF759A005DF93C /* SwiftProcessController.docc */; };
 		EDB4184D2DEF759A005DF93C /* ProcessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB418492DEF759A005DF93C /* ProcessController.swift */; };
 		EDD8BB3E2DEF755D00DDA5E1 /* SwiftProcessController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD8BB322DEF755C00DDA5E1 /* SwiftProcessController.framework */; };
@@ -31,6 +32,7 @@
 		ED5165782DEF7A0C00D54348 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
 		ED7D6BDD2DF23DFB000DDEAF /* SPCRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCRunnerTests.swift; sourceTree = "<group>"; };
 		ED7D6BDE2DF23DFB000DDEAF /* SwiftProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftProcessControllerTests.swift; sourceTree = "<group>"; };
+		ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
 		EDB418472DEF759A005DF93C /* JSONLIneDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLIneDecoder.swift; sourceTree = "<group>"; };
 		EDB418482DEF759A005DF93C /* SwiftProcessController.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftProcessController.docc; sourceTree = "<group>"; };
 		EDB418492DEF759A005DF93C /* ProcessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessController.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			children = (
 				EDB418492DEF759A005DF93C /* ProcessController.swift */,
 				ED5165782DEF7A0C00D54348 /* Runner.swift */,
+				ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */,
 				ED5165762DEF796200D54348 /* PublicTypes.swift */,
 				EDB418472DEF759A005DF93C /* JSONLIneDecoder.swift */,
 				EDB418482DEF759A005DF93C /* SwiftProcessController.docc */,
@@ -213,6 +216,7 @@
 				ED5165792DEF7A0F00D54348 /* Runner.swift in Sources */,
 				ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */,
 				EDB4184D2DEF759A005DF93C /* ProcessController.swift in Sources */,
+				ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

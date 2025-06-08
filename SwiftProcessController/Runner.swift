@@ -8,14 +8,15 @@ import Foundation
 public class Runner {
 	
 	private static let jsonDecoder = JSONDecoder()
-	var execPath: URL
+	public var execURL: URL
+	public var currentDirectory: URL?
 	
 	public init(executableURL: URL) {
-		execPath = executableURL
+		execURL = executableURL
 	}
 	
 	public init(executablePath: String) {
-		execPath = URL(fileURLWithPath: executablePath)
+		execURL = URL(fileURLWithPath: executablePath)
 	}
 	
 	// MARK: Run
@@ -25,9 +26,12 @@ public class Runner {
 		let proc = Process()
 		let stdout = Pipe()
 		let stderr = Pipe()
-		proc.executableURL = execPath
+		proc.executableURL = execURL
 		proc.standardOutput = stdout
 		proc.standardError = stderr
+		if currentDirectory != nil {
+			proc.currentDirectoryURL = currentDirectory
+		}
 		proc.arguments = args
 		if env != nil {
 			proc.environment = env

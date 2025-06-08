@@ -17,26 +17,26 @@ final class SPCRunnerTests: XCTestCase {
 	}
 	
 	func testRunner() throws {
-		let runner = Runner(executablePath: "/bin/sh")
+		let runner = ProcessRunner(executablePath: "/bin/sh")
 		XCTAssertNoThrow({
 			try runner.run(args: ["--version"], env: nil)
 		})
 	}
 	
 	func testRunnerBasicReturnsAndExitStatuses() throws {
-		let runTrue = Runner(executablePath: "/usr/bin/true")
+		let runTrue = ProcessRunner(executablePath: "/usr/bin/true")
 		let resTrue = try runTrue.run(args: [], env: nil)
 		XCTAssertEqual(resTrue.outputString(), "")
 		XCTAssertEqual(resTrue.errorString(), "")
 		XCTAssertEqual(resTrue.exitStatus, 0)
 		let url = URL(fileURLWithPath: "/usr/bin/false")
-		let runFalse = Runner(executableURL: url)
+		let runFalse = ProcessRunner(executableURL: url)
 		let resFalse = try runFalse.run(args: [], env: nil)
 		XCTAssertEqual(resFalse.exitStatus, 1)
 	}
 	
 	func testRunnerOutput() throws {
-		let run = Runner(executablePath: "/usr/bin/printf")
+		let run = ProcessRunner(executablePath: "/usr/bin/printf")
 		let printString = "test return"
 		let res = try run.run(args: [printString], env: nil)
 		XCTAssertEqual(res.outputString(), printString)
@@ -44,27 +44,27 @@ final class SPCRunnerTests: XCTestCase {
 	}
 	
 	func testRunnerStderr() throws {
-		let run = Runner(executablePath: "/usr/bin/printf")
+		let run = ProcessRunner(executablePath: "/usr/bin/printf")
 		let res = try run.run(args: [], env: nil)
 		XCTAssertEqual(res.outputString(), "")
 		XCTAssertEqual(res.errorString(), "usage: printf format [arguments ...]\n")
 	}
 	
 	func testRunnerStdBoth() throws {
-		let run = Runner(executablePath: "/bin/sh")
+		let run = ProcessRunner(executablePath: "/bin/sh")
 		let res = try run.run(args: ["-c", "/usr/bin/printf \"stdout\"; /usr/bin/printf \"stderr\" >&2"], env: nil)
 		XCTAssertEqual(res.outputString(), "stdout")
 		XCTAssertEqual(res.errorString(), "stderr")
 	}
 	
 	func testDefaultEnv() throws {
-		let run = Runner(executablePath: "/usr/bin/printenv")
+		let run = ProcessRunner(executablePath: "/usr/bin/printenv")
 		let res = try run.run(args: ["TERM"], env: nil)
 		XCTAssertEqual(res.outputString(), "dumb\n")
 	}
 	
 	func testCustomEnv() throws {
-		let run = Runner(executablePath: "/usr/bin/printenv")
+		let run = ProcessRunner(executablePath: "/usr/bin/printenv")
 		let env: [String : String] = ["TESTING_CUSTOM_ENV" : "custom enviorment variable"]
 		let res = try run.run(args: ["TESTING_CUSTOM_ENV"], env: env)
 		XCTAssertEqual(res.outputString(), "custom enviorment variable\n")
@@ -79,9 +79,20 @@ final class SPCRunnerTests: XCTestCase {
 			let arr: [Bool]
 		}
 		let sample_output = decodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test\nmultiline\nstring"], arr: [true, false, true, true, false])
-		let run = Runner(executablePath: "/bin/echo")
+		let run = ProcessRunner(executablePath: "/bin/echo")
 		let res = try run.run(args: [String(data: JSONEncoder().encode(sample_output), encoding: .utf8)!], env: nil, returning: decodableJSON.self)
 		XCTAssertEqual(res.output, sample_output)
+	}
+	
+	func testCurrentDirectory() throws {
+		let run = ProcessRunner(executablePath: "/bin/pwd")
+		let res = try run.run(args: [], env: nil).outputString()
+		XCTAssertEqual(res, "/tmp\n")
+		
+		let run2 = ProcessRunner(executablePath: "/bin/pwd")
+		run2.currentDirectory = URL(fileURLWithPath: "/usr/bin")
+		let res2 = try run2.run(args: [], env: nil).outputString()
+		XCTAssertEqual(res2, "/usr/bin\n")
 	}
 	
 }

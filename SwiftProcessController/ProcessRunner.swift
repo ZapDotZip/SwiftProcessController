@@ -5,7 +5,7 @@
 
 import Foundation
 
-public class Runner {
+public class ProcessRunner {
 	
 	private static let jsonDecoder = JSONDecoder()
 	public var execURL: URL
@@ -50,7 +50,7 @@ public class Runner {
 	///   - returning: The object type to return.
 	public func run<T: Decodable>(args: [String], env: [String : String]?, returning: T.Type) throws -> ProcessResultTyped<T> {
 		let result = try run(args: args, env: env)
-		let obj = try Runner.jsonDecoder.decode(T.self, from: result.output)
+		let obj = try ProcessRunner.jsonDecoder.decode(T.self, from: result.output)
 		return ProcessResultTyped(output: obj, error: result.error, exitStatus: result.exitStatus)
 	}
 	

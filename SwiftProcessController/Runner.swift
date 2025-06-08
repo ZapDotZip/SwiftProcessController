@@ -15,8 +15,8 @@ public class Runner {
 		execURL = executableURL
 	}
 	
-	public init(executablePath: String) {
-		execURL = URL(fileURLWithPath: executablePath)
+	public convenience init(executablePath: String) {
+		self.init(executableURL: URL(fileURLWithPath: executablePath))
 	}
 	
 	// MARK: Run

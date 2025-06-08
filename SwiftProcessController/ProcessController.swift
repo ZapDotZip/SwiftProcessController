@@ -8,45 +8,25 @@ import Foundation
 
 public class ProcessController {
 	
-	private static let jsonDecoder = JSONDecoder()
-	var execPath: URL
+	public var execURL: URL
+	public var qualityOfService: QualityOfService = .default
 	
-	public init(executableURL: URL) {
-		execPath = executableURL
+	public init(executableURL: URL, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+		execURL = executableURL
+		self.stdoutHandler = stdoutHandler
+		self.stderrHandler = stderrHandler
+		self.termHandler = terminationHandler
 	}
 	
-	public init(executablePath: String) {
-		execPath = URL(fileURLWithPath: executablePath)
+	public convenience init(executablePath: String, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
 	
-	// MARK: launch
+	private var stdoutHandler: pipedDataHandler!
+	private var stderrHandler: pipedDataHandler!
+	private var termHandler: terminationHandler!
 	
-	let newLine: UInt8 = "\n".data(using: .ascii)![0]
-	var partial: Data = Data()
-	var readHandler: pipedDataHandler!
-	var errHandler: pipedDataHandler!
-	var termHandler: terminationHandler!
-	
-	public func read(_ data: Data) {
-		partial.append(data)
-		var splits = partial.split(separator: newLine)
-		let last: Data? = splits.popLast()
-		for i in splits {
-			readHandler(i)
-		}
-		if last != nil {
-			if JSONSerialization.isValidJSONObject(last as Any) {
-				readHandler(last!)
-				partial = Data()
-			} else {
-				partial = last!
-				partial.append(newLine)
-			}
-		}
-	}
-	
-	public func exit(_ p: Process) {
-		readHandler(partial)
+	private func exit(_ p: Process) {
 		termHandler(p.terminationStatus)
 	}
 	
@@ -58,35 +38,29 @@ public class ProcessController {
 	/// - Parameter stdoutHandler: Repeatedly called when new data is present in stdout.
 	/// - Parameter stderrHandler: Repeatedly called when new data is present in stderr.
 	/// - Parameter terminationHandler: Called when the process exits.
-	public func launch(args: [String], env: [String : String]?, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, qos: QualityOfService) throws {
-		partial = Data()
-		readHandler = stdoutHandler
-		errHandler = stderrHandler
-		termHandler = terminationHandler
+	public func launch(args: [String], env: [String : String]?) throws {
 		
 		let proc = Process()
 		let stdout = Pipe()
 		let stderr = Pipe()
-		proc.executableURL = execPath
+		proc.executableURL = execURL
 		proc.standardOutput = stdout
 		proc.standardError = stderr
 		proc.arguments = args
 		if env != nil {
 			proc.environment = env
 		}
-		
-		proc.qualityOfService = qos
+		proc.qualityOfService = qualityOfService
 		
 		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: stdout.fileHandleForReading, queue: nil) { (notif) in
 			let handle = notif.object as! FileHandle
-			self.read(handle.availableData)
+			self.stdoutHandler(handle.availableData)
 			handle.waitForDataInBackgroundAndNotify()
 		}
 		
 		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: stderr.fileHandleForReading, queue: nil) { (notif) in
 			let handle = notif.object as! FileHandle
-			let data = handle.availableData
-			stderrHandler(data)
+			self.stderrHandler(handle.availableData)
 			handle.waitForDataInBackgroundAndNotify()
 		}
 		

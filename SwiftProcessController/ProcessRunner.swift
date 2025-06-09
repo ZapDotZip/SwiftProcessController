@@ -5,14 +5,12 @@
 
 import Foundation
 
-public class ProcessRunner {
+public class ProcessRunner: SPCBase {
 	
 	private static let jsonDecoder = JSONDecoder()
-	public var execURL: URL
-	public var currentDirectory: URL?
-	
+
 	public init(executableURL: URL) {
-		execURL = executableURL
+		super.init(execURL: executableURL)
 	}
 	
 	public convenience init(executablePath: String) {
@@ -22,24 +20,16 @@ public class ProcessRunner {
 	// MARK: Run
 	/// Runs with the provided arguments and returns the process output as a ProcessResult.
 	/// - Parameter args: The list of arguments to use.
-	public func run(args: [String], env: [String : String]?) throws -> ProcessResult {
-		let proc = Process()
-		let stdout = Pipe()
-		let stderr = Pipe()
-		proc.executableURL = execURL
-		proc.standardOutput = stdout
-		proc.standardError = stderr
-		if currentDirectory != nil {
-			proc.currentDirectoryURL = currentDirectory
-		}
-		proc.arguments = args
-		if env != nil {
-			proc.environment = env
-		}
+	public func run(args: [String]) throws -> ProcessResult {
+		
+		let standardOut = Pipe()
+		let standardErr = Pipe()
+		
+		let proc = CreateProcessObject(standardOutput: standardOut, standardError: standardErr, args: args)
 		
 		try proc.run()
-		let out = stdout.fileHandleForReading.readDataToEndOfFile()
-		let err = stderr.fileHandleForReading.readDataToEndOfFile()
+		let out = standardOut.fileHandleForReading.readDataToEndOfFile()
+		let err = standardErr.fileHandleForReading.readDataToEndOfFile()
 		proc.waitUntilExit()
 		return ProcessResult(output: out, error: err, exitStatus: proc.terminationStatus)
 	}
@@ -48,8 +38,8 @@ public class ProcessRunner {
 	/// - Parameters:
 	///   - args: The list of arguments to use.
 	///   - returning: The object type to return.
-	public func run<T: Decodable>(args: [String], env: [String : String]?, returning: T.Type) throws -> ProcessResultTyped<T> {
-		let result = try run(args: args, env: env)
+	public func run<T: Decodable>(args: [String], returning: T.Type) throws -> ProcessResultTyped<T> {
+		let result = try run(args: args)
 		let obj = try ProcessRunner.jsonDecoder.decode(T.self, from: result.output)
 		return ProcessResultTyped(output: obj, error: result.error, exitStatus: result.exitStatus)
 	}

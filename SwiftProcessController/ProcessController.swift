@@ -5,14 +5,10 @@
 
 import Foundation
 
-
-public class ProcessController {
-	
-	public var execURL: URL
-	public var qualityOfService: QualityOfService = .default
+public class ProcessController: SPCBase {
 	
 	public init(executableURL: URL, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
-		execURL = executableURL
+		super.init(execURL: executableURL)
 		self.stdoutHandler = stdoutHandler
 		self.stderrHandler = stderrHandler
 		self.termHandler = terminationHandler
@@ -38,27 +34,20 @@ public class ProcessController {
 	/// - Parameter stdoutHandler: Repeatedly called when new data is present in stdout.
 	/// - Parameter stderrHandler: Repeatedly called when new data is present in stderr.
 	/// - Parameter terminationHandler: Called when the process exits.
-	public func launch(args: [String], env: [String : String]?) throws {
+	public func launch(args: [String], standardInput: Pipe? = nil) throws {
 		
-		let proc = Process()
-		let stdout = Pipe()
-		let stderr = Pipe()
-		proc.executableURL = execURL
-		proc.standardOutput = stdout
-		proc.standardError = stderr
-		proc.arguments = args
-		if env != nil {
-			proc.environment = env
-		}
-		proc.qualityOfService = qualityOfService
+		let standardOutput = Pipe()
+		let standardError = Pipe()
 		
-		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: stdout.fileHandleForReading, queue: nil) { (notif) in
+		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		
+		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: standardOutput.fileHandleForReading, queue: nil) { (notif) in
 			let handle = notif.object as! FileHandle
 			self.stdoutHandler(handle.availableData)
 			handle.waitForDataInBackgroundAndNotify()
 		}
 		
-		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: stderr.fileHandleForReading, queue: nil) { (notif) in
+		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: standardError.fileHandleForReading, queue: nil) { (notif) in
 			let handle = notif.object as! FileHandle
 			self.stderrHandler(handle.availableData)
 			handle.waitForDataInBackgroundAndNotify()
@@ -67,8 +56,8 @@ public class ProcessController {
 		proc.terminationHandler = exit(_:)
 		currentlyRunningProcess = proc
 		try proc.run()
-		stdout.fileHandleForReading.waitForDataInBackgroundAndNotify()
-		stderr.fileHandleForReading.waitForDataInBackgroundAndNotify()
+		standardOutput.fileHandleForReading.waitForDataInBackgroundAndNotify()
+		standardError.fileHandleForReading.waitForDataInBackgroundAndNotify()
 		proc.waitUntilExit()
 		currentlyRunningProcess = nil
 	}

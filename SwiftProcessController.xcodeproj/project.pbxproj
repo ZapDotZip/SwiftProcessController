@@ -8,13 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165762DEF796200D54348 /* PublicTypes.swift */; };
-		ED5165792DEF7A0F00D54348 /* Runner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* Runner.swift */; };
-		ED7D6BE02DF23DFB000DDEAF /* SPCRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* SPCRunnerTests.swift */; };
-		ED7D6BE12DF23DFB000DDEAF /* SwiftProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* SwiftProcessControllerTests.swift */; };
+		ED5165792DEF7A0F00D54348 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */; };
+		ED7D6BE02DF23DFB000DDEAF /* ProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */; };
+		ED7D6BE12DF23DFB000DDEAF /* ProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* ProcessControllerTests.swift */; };
 		ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */; };
 		EDB4184C2DEF759A005DF93C /* SwiftProcessController.docc in Sources */ = {isa = PBXBuildFile; fileRef = EDB418482DEF759A005DF93C /* SwiftProcessController.docc */; };
 		EDB4184D2DEF759A005DF93C /* ProcessController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB418492DEF759A005DF93C /* ProcessController.swift */; };
+		EDD2C4272DF36C0400D80EB0 /* LineStreamer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDB418472DEF759A005DF93C /* LineStreamer.swift */; };
 		EDD8BB3E2DEF755D00DDA5E1 /* SwiftProcessController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EDD8BB322DEF755C00DDA5E1 /* SwiftProcessController.framework */; };
+		EDE235D72DF65C3D0065798F /* SPCBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE235D62DF65C3D0065798F /* SPCBase.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,15 +31,16 @@
 
 /* Begin PBXFileReference section */
 		ED5165762DEF796200D54348 /* PublicTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTypes.swift; sourceTree = "<group>"; };
-		ED5165782DEF7A0C00D54348 /* Runner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Runner.swift; sourceTree = "<group>"; };
-		ED7D6BDD2DF23DFB000DDEAF /* SPCRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCRunnerTests.swift; sourceTree = "<group>"; };
-		ED7D6BDE2DF23DFB000DDEAF /* SwiftProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftProcessControllerTests.swift; sourceTree = "<group>"; };
+		ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
+		ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunnerTests.swift; sourceTree = "<group>"; };
+		ED7D6BDE2DF23DFB000DDEAF /* ProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessControllerTests.swift; sourceTree = "<group>"; };
 		ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
-		EDB418472DEF759A005DF93C /* JSONLIneDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLIneDecoder.swift; sourceTree = "<group>"; };
+		EDB418472DEF759A005DF93C /* LineStreamer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineStreamer.swift; sourceTree = "<group>"; };
 		EDB418482DEF759A005DF93C /* SwiftProcessController.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftProcessController.docc; sourceTree = "<group>"; };
 		EDB418492DEF759A005DF93C /* ProcessController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessController.swift; sourceTree = "<group>"; };
 		EDD8BB322DEF755C00DDA5E1 /* SwiftProcessController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SwiftProcessController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EDD8BB3D2DEF755D00DDA5E1 /* SwiftProcessControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwiftProcessControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EDE235D62DF65C3D0065798F /* SPCBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCBase.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,8 +65,8 @@
 		ED7D6BDF2DF23DFB000DDEAF /* SwiftProcessControllerTests */ = {
 			isa = PBXGroup;
 			children = (
-				ED7D6BDE2DF23DFB000DDEAF /* SwiftProcessControllerTests.swift */,
-				ED7D6BDD2DF23DFB000DDEAF /* SPCRunnerTests.swift */,
+				ED7D6BDE2DF23DFB000DDEAF /* ProcessControllerTests.swift */,
+				ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */,
 			);
 			path = SwiftProcessControllerTests;
 			sourceTree = "<group>";
@@ -71,11 +74,12 @@
 		EDB4184A2DEF759A005DF93C /* SwiftProcessController */ = {
 			isa = PBXGroup;
 			children = (
+				EDE235D62DF65C3D0065798F /* SPCBase.swift */,
 				EDB418492DEF759A005DF93C /* ProcessController.swift */,
-				ED5165782DEF7A0C00D54348 /* Runner.swift */,
+				EDB418472DEF759A005DF93C /* LineStreamer.swift */,
+				ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */,
 				ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */,
 				ED5165762DEF796200D54348 /* PublicTypes.swift */,
-				EDB418472DEF759A005DF93C /* JSONLIneDecoder.swift */,
 				EDB418482DEF759A005DF93C /* SwiftProcessController.docc */,
 			);
 			path = SwiftProcessController;
@@ -213,10 +217,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				EDB4184C2DEF759A005DF93C /* SwiftProcessController.docc in Sources */,
-				ED5165792DEF7A0F00D54348 /* Runner.swift in Sources */,
+				ED5165792DEF7A0F00D54348 /* ProcessRunner.swift in Sources */,
 				ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */,
 				EDB4184D2DEF759A005DF93C /* ProcessController.swift in Sources */,
+				EDD2C4272DF36C0400D80EB0 /* LineStreamer.swift in Sources */,
 				ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */,
+				EDE235D72DF65C3D0065798F /* SPCBase.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,8 +230,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED7D6BE02DF23DFB000DDEAF /* SPCRunnerTests.swift in Sources */,
-				ED7D6BE12DF23DFB000DDEAF /* SwiftProcessControllerTests.swift in Sources */,
+				ED7D6BE02DF23DFB000DDEAF /* ProcessRunnerTests.swift in Sources */,
+				ED7D6BE12DF23DFB000DDEAF /* ProcessControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,6 +389,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
@@ -415,6 +422,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";

@@ -8,6 +8,7 @@ import Foundation
 public class SPCBase {
 	public var execURL: URL
 	public var env: [String : String]?
+	public var standardInput: Pipe?
 	public var currentDirectory: URL?
 	public var qualityOfService: QualityOfService = .default
 	
@@ -20,6 +21,9 @@ public class SPCBase {
 		proc.executableURL = execURL
 		proc.standardOutput = standardOutput
 		proc.standardError = standardError
+		if standardInput != nil {
+			proc.standardInput = standardInput
+		}
 		if currentDirectory != nil {
 			proc.currentDirectoryURL = currentDirectory
 		}

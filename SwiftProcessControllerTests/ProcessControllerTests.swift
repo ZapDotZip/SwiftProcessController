@@ -18,18 +18,11 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testSimple() throws {
 		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in
-			stdinData.append(d)
-		}
+		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
 		var stderrData = Data()
-		let errHandler: pipedDataHandler = {d in
-			stderrData.append(d)
-		}
+		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
 		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in
-			exitCode = code
-			print("exited")
-		}
+		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		try pc.launch(args: ["testing"])
 		XCTAssertEqual(exitCode, 0)
@@ -39,18 +32,11 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testMultiLine() throws {
 		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in
-			stdinData.append(d)
-		}
+		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
 		var stderrData = Data()
-		let errHandler: pipedDataHandler = {d in
-			stderrData.append(d)
-		}
+		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
 		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in
-			exitCode = code
-			print("exited")
-		}
+		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/bin/cat", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let input = Pipe()
 		pc.standardInput = input

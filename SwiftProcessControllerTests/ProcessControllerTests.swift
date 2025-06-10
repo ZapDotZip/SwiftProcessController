@@ -7,9 +7,21 @@ import XCTest
 @testable import SwiftProcessController
 
 final class ProcessControllerTests: XCTestCase {
+	var stdinData = Data()
+	var inHandler: pipedDataHandler = { d in XCTFail("Unset closure!") }
+	var stderrData = Data()
+	var errHandler: pipedDataHandler = { d in XCTFail("Unset closure!") }
+	var exitCode: Int32?
+	var termHandler: terminationHandler = { code in XCTFail("Unset closure!") }
 	
 	override func setUpWithError() throws {
-		// Put setup code here. This method is called before the invocation of each test method in the class.
+		stdinData = Data()
+		inHandler = { d in self.stdinData.append(d) }
+		stderrData = Data()
+		errHandler = { d in self.stderrData.append(d) }
+		exitCode = nil
+		termHandler = { code in self.exitCode = code }
+
 	}
 	
 	override func tearDownWithError() throws {
@@ -17,12 +29,6 @@ final class ProcessControllerTests: XCTestCase {
 	}
 	
 	func testSimple() throws {
-		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
-		var stderrData = Data()
-		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
-		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		try pc.launch(args: ["testing"])
 		XCTAssertEqual(exitCode, 0)
@@ -31,12 +37,6 @@ final class ProcessControllerTests: XCTestCase {
 	}
 	
 	func testSimpleExitCode() throws {
-		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
-		var stderrData = Data()
-		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
-		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/usr/bin/false", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		try pc.launch(args: [])
 		XCTAssertEqual(exitCode, 1)
@@ -45,12 +45,6 @@ final class ProcessControllerTests: XCTestCase {
 	}
 
 	func testMultiLine() throws {
-		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
-		var stderrData = Data()
-		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
-		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/bin/cat", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let input = Pipe()
 		pc.standardInput = input
@@ -74,12 +68,6 @@ final class ProcessControllerTests: XCTestCase {
 	}
 	
 	func testSimpleCommand() throws {
-		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
-		var stderrData = Data()
-		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
-		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let standardInput = Pipe()
 		pc.standardInput = standardInput
@@ -100,12 +88,6 @@ final class ProcessControllerTests: XCTestCase {
 	}
 	
 	func testMultiLineWithError() throws {
-		var stdinData = Data()
-		let inHandler: pipedDataHandler = { d in stdinData.append(d) }
-		var stderrData = Data()
-		let errHandler: pipedDataHandler = { d in stderrData.append(d) }
-		var exitCode: Int32?
-		let termHandler: terminationHandler = { code in exitCode = code }
 		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let input = Pipe()
 		pc.standardInput = input
@@ -114,7 +96,7 @@ final class ProcessControllerTests: XCTestCase {
 		var errResult = ""
 		dq.async {
 			do {
-				for i in 0...150 {
+				for i in 0...2500 {
 					if ((i % 3) == 0) {
 						let inLine = "echo line \(i)\n"
 						try input.fileHandleForWriting.write(contentsOf: inLine.data(using: .ascii)!)

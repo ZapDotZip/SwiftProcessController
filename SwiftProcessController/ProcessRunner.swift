@@ -8,14 +8,6 @@ import Foundation
 public class ProcessRunner: SPCBase {
 	
 	private static let jsonDecoder = JSONDecoder()
-
-	public init(executableURL: URL) {
-		super.init(execURL: executableURL)
-	}
-	
-	public convenience init(executablePath: String) {
-		self.init(executableURL: URL(fileURLWithPath: executablePath))
-	}
 	
 	// MARK: Run
 	/// Runs with the provided arguments and returns the process output as a ProcessResult.

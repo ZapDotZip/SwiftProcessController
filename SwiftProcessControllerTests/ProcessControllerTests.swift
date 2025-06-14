@@ -119,5 +119,5 @@ final class ProcessControllerTests: XCTestCase {
 		XCTAssertEqual(String(data: stdinData, encoding: .ascii), inResult)
 		XCTAssertEqual(String(data: stderrData, encoding: .ascii), errResult)
 	}
-
+	
 }

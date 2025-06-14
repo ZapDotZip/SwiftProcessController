@@ -12,3 +12,8 @@ public enum ProcessControllerError: Error {
 	case couldNotDecodeStringOutput
 	case couldNotDecodeJSON(String, String)
 }
+
+public enum ProcessResultDecoder {
+	case JSON
+	case PropertyList
+}

@@ -72,15 +72,15 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		}
 	}
 	
-	public func launchTypedStream(args: [String], standardInput: Pipe? = nil) throws {
+	public func launch(args: [String], standardInput: Pipe? = nil) throws {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
 		
 		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
-		addToNC(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
-		addToNC(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		addReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
+		addReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		try startProcess(proc: proc)
 		if partial.count != 0 {
 			decoderFunc(partial)

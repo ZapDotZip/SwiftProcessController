@@ -59,13 +59,10 @@ public class SPCBaseController: SPCBase {
 		termHandler(p.terminationStatus)
 	}
 	
-	func addToNC(fileHandle: FileHandle, handler: @escaping pipedDataHandler) {
-		NotificationCenter.default.addObserver(forName: .NSFileHandleDataAvailable, object: fileHandle, queue: nil) { (notif) in
-			let handle = notif.object as! FileHandle
-			handler(handle.availableData)
-			handle.waitForDataInBackgroundAndNotify()
+	func addReadHandler(fileHandle: FileHandle, handler: @escaping pipedDataHandler) {
+		fileHandle.readabilityHandler = { fh in
+			handler(fh.availableData)
 		}
-		fileHandle.waitForDataInBackgroundAndNotify()
 	}
 	
 	func startProcess(proc: Process) throws {

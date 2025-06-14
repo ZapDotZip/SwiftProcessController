@@ -39,7 +39,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		
 		let pc = ProcessControllerTyped.init(executablePath: "/bin/echo", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON, errHandler: blankErrHandler)
 		let testResult = decodableObj(id: 0, value: "abc")
-		try pc.launchTypedStream(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
+		try pc.launch(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(results[0], testResult)
 	}
@@ -52,7 +52,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		
 		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON, errHandler: blankErrHandler)
 		let testResult = decodableObj(id: 0, value: "abc")
-		try pc.launchTypedStream(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
+		try pc.launch(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(results[0], testResult)
 	}
@@ -81,7 +81,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 				XCTFail(error.localizedDescription)
 			}
 		}
-		try pc.launchTypedStream(args: [])
+		try pc.launch(args: [])
 		XCTAssertEqual(exitCode, 0)
 		for i in 0...TEST_COUNT {
 			XCTAssertEqual(results[i].id, i)
@@ -100,7 +100,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		let testResult = decodableObj(id: 0, value: "abc")
 		var encoded: Data = try plistEncoder.encode(testResult)
 		encoded.append("\\0".data(using: .utf8)!)
-		try pc.launchTypedStream(args: [String(data: encoded, encoding: .utf8)!])
+		try pc.launch(args: [String(data: encoded, encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(results[0], testResult)
 	}
@@ -113,7 +113,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		
 		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
 		let testResult = decodableObj(id: 0, value: "abc")
-		try pc.launchTypedStream(args: [String(data: plistEncoder.encode(testResult), encoding: .utf8)!])
+		try pc.launch(args: [String(data: plistEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(results[0], testResult)
 	}
@@ -142,7 +142,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 				XCTFail(error.localizedDescription)
 			}
 		}
-		try pc.launchTypedStream(args: [])
+		try pc.launch(args: [])
 		XCTAssertEqual(exitCode, 0)
 		for i in 0..<TEST_COUNT {
 			XCTAssertEqual(results[i].id, i)

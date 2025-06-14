@@ -34,8 +34,8 @@ public class ProcessController: SPCBaseController {
 		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
-		addToNC(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
-		addToNC(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		addReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
+		addReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		
 		try startProcess(proc: proc)
 	}

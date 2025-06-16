@@ -5,18 +5,24 @@
 
 import Foundation
 
+/// A base class to hold functionailty for both `ProcessRunner` and `ProcessController`. Do not use directly.
 public class SPCBase {
+	/// The location of the binary to execute.
 	public var executableURL: URL
+	/// The enviorment to use when running the process. If set to `nil`, the process will inherit the parent's enviorment. If set to an empty dictionary, the process will have no enviorment.
 	public var env: [String : String]?
+	/// If set, the pipe which will be used for the process's standard input.
 	public var standardInput: Pipe?
+	/// The process's working directory. If set to `nil`, the process will inherit the parent's current working directory.
 	public var currentDirectory: URL?
+	/// The quality of service to run the process with. Defaults to `QualityOfService.default`
 	public var qualityOfService: QualityOfService = .default
 	
-	public init(executableURL: URL) {
+	init(executableURL: URL) {
 		self.executableURL = executableURL
 	}
 	
-	public convenience init(executablePath: String) {
+	convenience init(executablePath: String) {
 		self.init(executableURL: URL(fileURLWithPath: executablePath))
 	}
 	
@@ -40,6 +46,7 @@ public class SPCBase {
 	}
 }
 
+/// A base class to hold functionailty for ProcessController. Do not use directly.
 public class SPCBaseController: SPCBase {
 	public static let separatorNewLine: UInt8 = "\n".data(using: .ascii)![0]
 	public static let separatorNulChar: UInt8 = "\0".data(using: .ascii)![0]
@@ -49,7 +56,7 @@ public class SPCBaseController: SPCBase {
 
 	public var currentlyRunningProcess: Process?
 	
-	public init(executableURL: URL, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+	init(executableURL: URL, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
 		termHandler = terminationHandler
 		self.stderrHandler = stderrHandler
 		super.init(executableURL: executableURL)

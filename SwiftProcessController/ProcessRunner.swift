@@ -20,9 +20,11 @@ public class ProcessRunner: SPCBase {
 		let proc = CreateProcessObject(standardOutput: standardOut, standardError: standardErr, args: args)
 		
 		try proc.run()
+		currentlyRunningProcess = proc
 		let out = standardOut.fileHandleForReading.readDataToEndOfFile()
 		let err = standardErr.fileHandleForReading.readDataToEndOfFile()
 		proc.waitUntilExit()
+		currentlyRunningProcess = nil
 		return ProcessResult(output: out, error: err, exitStatus: proc.terminationStatus)
 	}
 	

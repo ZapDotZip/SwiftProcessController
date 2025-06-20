@@ -5,7 +5,8 @@
 
 import Foundation
 
-/// A base class to hold functionailty for both `ProcessRunner` and `ProcessController`. Do not use directly.
+/// A base class to hold functionailty for both `ProcessRunner` and `ProcessController`.
+/// > Warning: Do not use directly.
 public class SPCBase {
 	/// The location of the binary to execute.
 	public var executableURL: URL
@@ -18,7 +19,8 @@ public class SPCBase {
 	/// The quality of service to run the process with. Defaults to `QualityOfService.default`
 	public var qualityOfService: QualityOfService = .default
 	
-	/// The currently running process, if there is one. Avoid working with this object directly, if possible.
+	/// The currently running process, if there is one.
+	/// > Warning: Avoid working with this object directly, if possible.
 	public var currentlyRunningProcess: Process?
 	var isSuspended: Bool = false
 	
@@ -68,31 +70,34 @@ public class SPCBase {
 		return false
 	}
 	
-	/// Sends a SIGTERM to the running process, if it exists.
+	/// Sends a `SIGTERM` to the running process, if it exists.
 	public func terminate() {
 		if let currentlyRunningProcess {
 			currentlyRunningProcess.terminate()
 		}
 	}
 	
+	/// Sends a `SIGTERM` to the running process, if it exists, then waits for the process to exit before returning.
 	public func terminateAndWaitForExit() {
 		terminate()
 		currentlyRunningProcess?.waitUntilExit()
 	}
 	
-	/// Kills the process via SIGKILL.
+	/// Kills the process via `SIGKILL`.
 	public func kill() throws {
 		try signal(signal: SIGKILL)
 	}
 	
+	/// Kills the process via `SIGKILL`, waiting for the process to exit before returning.
 	public func killAndWaitForExit() throws {
 		try kill()
 		currentlyRunningProcess?.waitUntilExit()
 	}
 	
-	/// Sends the signal to the process. Do not use SIGSTOP/SIGCONT and the suspend()/resume() functions at the same time.
+	/// Sends the signal to the process.
+	/// > Warning: Do not use `SIGSTOP`/`SIGCONT` and the `suspend()`/`resume()` functions at the same time.
 	/// - Parameter signal: The signal to send.
-	public func signal(signal: Int32) throws {
+	public func signal(signal: Int32) throws(SignalError) {
 		if let currentlyRunningProcess {
 			let res = _signal.kill(currentlyRunningProcess.processIdentifier, SIGTERM)
 			if res != 0 {
@@ -101,6 +106,12 @@ public class SPCBase {
 		}
 	}
 	
+	/// Creates a new Process object based off the provided arguments and class variables.
+	/// - Parameters:
+	///   - standardOutput: Pipe for the process's output
+	///   - standardError: Pipe for the process's error
+	///   - args: Process arguments
+	/// - Returns: New Process object
 	func CreateProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
 		let proc = Process()
 		proc.executableURL = executableURL
@@ -123,8 +134,8 @@ public class SPCBase {
 
 /// A base class to hold functionailty for ProcessController. Do not use directly.
 public class SPCBaseController: SPCBase {
-	public static let separatorNewLine: UInt8 = "\n".data(using: .ascii)![0]
-	public static let separatorNulChar: UInt8 = "\0".data(using: .ascii)![0]
+	public static let separatorNewLine: UInt8 = 0x0A
+	public static let separatorNulChar: UInt8 = 0x00
 
 	var stderrHandler: pipedDataHandler
 	var termHandler: terminationHandler
@@ -148,11 +159,15 @@ public class SPCBaseController: SPCBase {
 		}
 	}
 	
+	/// Starts the process.
+	/// - Parameter proc: The process to start
 	func startProcess(proc: Process) throws {
 		try proc.run()
 		currentlyRunningProcess = proc
 	}
 	
+	/// Starts the process and waits for it to exit.
+	/// - Parameter proc: The process to start
 	func startProcessAndWaitUntilExit(proc: Process) throws {
 		try proc.run()
 		currentlyRunningProcess = proc

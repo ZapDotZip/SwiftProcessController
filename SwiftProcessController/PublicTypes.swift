@@ -19,8 +19,11 @@ public enum ProcessResultDecoder {
 }
 
 public enum ProcessState {
+	/// There is no running process.
 	case notRunning
+	/// There is an active process running.
 	case running
+	/// There is an active process which is suspended.
 	case suspended
 }
 

@@ -5,6 +5,7 @@
 
 import Foundation
 
+/// An object which launches a proess and handles output as it is generated.
 public class ProcessController: SPCBaseController {
 	
 	private var stdoutHandler: pipedDataHandler
@@ -20,6 +21,12 @@ public class ProcessController: SPCBaseController {
 		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
 	
+	/// Creates a ProcessController object.
+	/// - Parameters:
+	///   - executablePath: The executable binary to run.
+	///   - stdoutHandler: Repeatedly called when new data is present in stdout.
+	///   - stderrHandler: Repeatedly called when new data is present in stderr.
+	///   - terminationHandler: Called when the process exits.
 	public convenience init(executablePath: String, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
 		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}

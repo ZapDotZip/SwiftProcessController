@@ -5,14 +5,14 @@
 
 import Foundation
 
-
+/// An object which launches a proess and decodes output to an object as it is generated.
 public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 	public typealias typedHandler = (T) -> Void
 	public typealias errorHandler = (Error, Data) -> Void
 	
-	private let objectHandler: (T) -> Void
+	private let objectHandler: typedHandler
 	private let separator: UInt8
-	private var decoderFunc: ((Data) -> Void)!
+	private var decoderFunc: pipedDataHandler!
 	private let errHandler: errorHandler
 	
 	private let jsonDecoder = JSONDecoder()
@@ -37,26 +37,30 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, errHandler: errHandler, separator: separator)
 	}
 	
+	/// Creates the `T` object from the provided JSON data, then calls the objectHandler on the object.
+	/// - Parameter data: The data to decode into an object.
 	private func generateTypedObjectJSON(_ data: Data) {
 		do {
 			let obj = try jsonDecoder.decode(T.self, from: data)
 			objectHandler(obj)
 		} catch {
-			NSLog("Error decoding json: \(error)")
 			errHandler(error, data)
 		}
 	}
 	
+	/// Creates the `T` object from the provided Property List data, then calls the objectHandler on the object.
+	/// - Parameter data: The data to decode into an object.
 	private func generateTypedObjectPropertyList(_ data: Data) {
 		do {
 			let obj = try plistDecoder.decode(T.self, from: data)
 			objectHandler(obj)
 		} catch {
-			NSLog("Error decoding json: \(error)")
 			errHandler(error, data)
 		}
 	}
 	
+	/// Repeatedly called to append new data to partial data, then splits the data as necessary to call the object handler.
+	/// - Parameter data: The new data to add.
 	func read(_ data: Data) {
 		partial.append(data)
 		var splits = partial.split(separator: separator)
@@ -80,6 +84,10 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		exitHandler(p)
 	}
 	
+	/// Starts the process and returns, letting it run in the background.
+	/// - Parameters:
+	///   - args: Process arguments
+	///   - standardInput: Standard input provided to the process, if any.
 	public func launch(args: [String], standardInput: Pipe? = nil) throws {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
@@ -92,6 +100,10 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		try startProcess(proc: proc)
 	}
 	
+	/// Starts the process, then waits for it to exit.
+	/// - Parameters:
+	///   - args: Process arguments
+	///   - standardInput: Standard input provided to the process, if any.
 	public func launchAndWaitUntilExit(args: [String], standardInput: Pipe? = nil) throws {
 		try launch(args: args, standardInput: standardInput)
 		currentlyRunningProcess?.waitUntilExit()

@@ -72,19 +72,29 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		}
 	}
 	
+	/// Ensures the rest of the data is processed before exiting.
+	func typedExitHandler(_ p: Process) {
+		if partial.count != 0 {
+			decoderFunc(partial)
+		}
+		exitHandler(p)
+	}
+	
 	public func launch(args: [String], standardInput: Pipe? = nil) throws {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
 		
 		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
-		proc.terminationHandler = exitHandler(_:)
-		addReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
-		addReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		proc.terminationHandler = typedExitHandler(_:)
+		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
+		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		try startProcess(proc: proc)
-		if partial.count != 0 {
-			decoderFunc(partial)
-		}
+	}
+	
+	public func launchAndWaitUntilExit(args: [String], standardInput: Pipe? = nil) throws {
+		try launch(args: args, standardInput: standardInput)
+		currentlyRunningProcess?.waitUntilExit()
 	}
 	
 }

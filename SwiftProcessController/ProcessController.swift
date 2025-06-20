@@ -24,7 +24,7 @@ public class ProcessController: SPCBaseController {
 		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
 	
-	/// Launches the command for monitoring.
+	/// Launches the command for monitoring. Returns after starting the process.
 	/// - Parameter args: The list of arguments to use.
 	/// - Parameter env: The enviorment dictionary.
 	public func launch(args: [String], standardInput: Pipe? = nil) throws {
@@ -34,10 +34,26 @@ public class ProcessController: SPCBaseController {
 		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
-		addReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
-		addReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
+		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		
 		try startProcess(proc: proc)
+	}
+	
+	/// Launches the command for monitoring. Returns when the process exits.
+	/// - Parameter args: The list of arguments to use.
+	/// - Parameter env: The enviorment dictionary.
+	public func launchAndWaitUntilExit(args: [String], standardInput: Pipe? = nil) throws {
+		let standardOutput = Pipe()
+		let standardError = Pipe()
+		
+		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		
+		proc.terminationHandler = exitHandler(_:)
+		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
+		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		
+		try startProcessAndWaitUntilExit(proc: proc)
 	}
 	
 }

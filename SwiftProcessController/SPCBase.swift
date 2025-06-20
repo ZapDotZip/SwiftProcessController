@@ -135,11 +135,14 @@ public class SPCBaseController: SPCBase {
 		super.init(executableURL: executableURL)
 	}
 	
+	/// Default exit handler which sets the current process to nil and calls the user-provided `termHandler`.
 	func exitHandler(_ p: Process) {
+		currentlyRunningProcess = nil
 		termHandler(p.terminationStatus)
 	}
 	
-	func addReadHandler(fileHandle: FileHandle, handler: @escaping pipedDataHandler) {
+	/// Sets a read handler to repeatedly recieve data from a FileHandle
+	func setupReadHandler(fileHandle: FileHandle, handler: @escaping pipedDataHandler) {
 		fileHandle.readabilityHandler = { fh in
 			handler(fh.availableData)
 		}
@@ -148,8 +151,12 @@ public class SPCBaseController: SPCBase {
 	func startProcess(proc: Process) throws {
 		try proc.run()
 		currentlyRunningProcess = proc
+	}
+	
+	func startProcessAndWaitUntilExit(proc: Process) throws {
+		try proc.run()
+		currentlyRunningProcess = proc
 		proc.waitUntilExit()
-		currentlyRunningProcess = nil
 	}
 	
 }

@@ -30,7 +30,7 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testSimple() throws {
 		let pc = ProcessController(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
-		try pc.launch(args: ["testing"])
+		try pc.launchAndWaitUntilExit(args: ["testing"])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(String(data: stdinData, encoding: .ascii), "testing")
 		XCTAssertEqual(stderrData.count, 0)
@@ -38,7 +38,7 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testSimpleExitCode() throws {
 		let pc = ProcessController(executablePath: "/usr/bin/false", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
-		try pc.launch(args: [])
+		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(exitCode, 1)
 		XCTAssertEqual(stdinData.count, 0)
 		XCTAssertEqual(stderrData.count, 0)
@@ -61,7 +61,7 @@ final class ProcessControllerTests: XCTestCase {
 			}
 		}
 		
-		try pc.launch(args: [])
+		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(String(data: stdinData, encoding: .ascii), inputArr)
 		XCTAssertEqual(stderrData.count, 0)
@@ -81,7 +81,7 @@ final class ProcessControllerTests: XCTestCase {
 				XCTFail(error.localizedDescription)
 			}
 		}
-		try pc.launch(args: [])
+		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(String(data: stdinData, encoding: .ascii), "hello\nhello\n")
 		XCTAssertEqual(stderrData.count, 0)
@@ -114,7 +114,7 @@ final class ProcessControllerTests: XCTestCase {
 			}
 		}
 		
-		try pc.launch(args: [])
+		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(String(data: stdinData, encoding: .ascii), inResult)
 		XCTAssertEqual(String(data: stderrData, encoding: .ascii), errResult)

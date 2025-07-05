@@ -9,6 +9,14 @@ public class ProcessRunner: SPCBase {
 	
 	private static let jsonDecoder = JSONDecoder()
 	
+	public override init(executableURL: URL) {
+		super.init(executableURL: executableURL)
+	}
+	
+	public convenience init(executablePath: String) {
+		self.init(executableURL: URL(fileURLWithPath: executablePath))
+	}
+	
 	// MARK: Run
 	/// Runs with the provided arguments and returns the process output as a ProcessResult.
 	/// - Parameter args: The list of arguments to use.

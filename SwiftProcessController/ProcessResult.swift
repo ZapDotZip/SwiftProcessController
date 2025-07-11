@@ -6,22 +6,22 @@
 import Foundation
 
 public struct ProcessResult {
-	let output: Data
-	let error: Data
-	let exitStatus: Int32
-	func outputString() -> String? {
+	public let output: Data
+	public let error: Data
+	public let exitStatus: Int32
+	public func outputString() -> String? {
 		String.init(data: output, encoding: .utf8)
 	}
-	func errorString() -> String? {
+	public func errorString() -> String? {
 		String.init(data: error, encoding: .utf8)
 	}
 }
 
 public struct ProcessResultTyped<T> {
-	let output: T
-	let error: Data
-	let exitStatus: Int32
-	lazy var errorString: String? = {
+	public let output: T
+	public let error: Data
+	public let exitStatus: Int32
+	public lazy var errorString: String? = {
 		String.init(data: error, encoding: .utf8)
 	}()
 }

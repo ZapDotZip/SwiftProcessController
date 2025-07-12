@@ -151,4 +151,27 @@ final class ProcessControllerTypedTests: XCTestCase {
 		XCTAssertEqual(results[TEST_COUNT + 1].value.count, 5000)
 	}
 	
+	func testPlistPerformance() {
+		self.measure {
+			let termHandler: terminationHandler = { _ in }
+			var results: [decodableObj] = []
+			let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+			let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
+			let dq = DispatchQueue(label: "test.async")
+			let TEST_COUNT = 1_250
+			dq.async { [self] in
+				let procstdin = Pipe()
+				pc.standardInput = procstdin
+				for i in 0...TEST_COUNT {
+					let encoded = try! String(data: self.plistEncoder.encode(decodableObj(id: i, value: String.init(repeating: "a", count: i))), encoding: .utf8)!
+					try! procstdin.fileHandleForWriting.write(contentsOf: "printf '\(encoded)\\0'\n".data(using: .utf8)!)
+				}
+				let encoded = try! String(data: self.plistEncoder.encode(decodableObj(id: TEST_COUNT + 1, value: String.init(repeating: "a", count: 5000))), encoding: .utf8)!
+				try! procstdin.fileHandleForWriting.write(contentsOf: "printf '\(encoded)\\0'\n".data(using: .utf8)!)
+				try! procstdin.fileHandleForWriting.close()
+			}
+			try! pc.launchAndWaitUntilExit(args: [])
+		}
+	}
+	
 }

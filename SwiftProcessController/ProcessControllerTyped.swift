@@ -7,23 +7,21 @@ import Foundation
 
 /// An object which launches a proess and decodes output to an object as it is generated.
 public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
-	public typealias typedHandler = (T) -> Void
+	public typealias typedHandler = (StreamingProcessResult<T>) -> Void
 	public typealias errorHandler = (Error, Data) -> Void
 	
 	private let objectHandler: typedHandler
 	private let separator: UInt8
 	private var decoderFunc: pipedDataHandler!
-	private let errHandler: errorHandler
 	
 	private let jsonDecoder = JSONDecoder()
 	private let plistDecoder = PropertyListDecoder()
 	
 	private var partial = Data()
 	
-	public init(executableURL: URL, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, errHandler: @escaping errorHandler, separator: UInt8 = separatorNewLine) {
+	public init(executableURL: URL, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
 		self.objectHandler = stdoutHandler
 		self.separator = separator
-		self.errHandler = errHandler
 		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 		switch decoderType {
 			case .JSON:
@@ -33,8 +31,8 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		}
 	}
 	
-	public convenience init(executablePath: String, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, errHandler: @escaping errorHandler, separator: UInt8 = separatorNewLine) {
-		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, errHandler: errHandler, separator: separator)
+	public convenience init(executablePath: String, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
+		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, separator: separator)
 	}
 	
 	/// Creates the `T` object from the provided JSON data, then calls the objectHandler on the object.
@@ -42,9 +40,9 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 	private func generateTypedObjectJSON(_ data: Data) {
 		do {
 			let obj = try jsonDecoder.decode(T.self, from: data)
-			objectHandler(obj)
+			objectHandler(StreamingProcessResult.object(output: obj))
 		} catch {
-			errHandler(error, data)
+			objectHandler(StreamingProcessResult.error(rawData: data, err: error))
 		}
 	}
 	
@@ -53,9 +51,9 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 	private func generateTypedObjectPropertyList(_ data: Data) {
 		do {
 			let obj = try plistDecoder.decode(T.self, from: data)
-			objectHandler(obj)
+			objectHandler(StreamingProcessResult.object(output: obj))
 		} catch {
-			errHandler(error, data)
+			objectHandler(StreamingProcessResult.error(rawData: data, err: error))
 		}
 	}
 	

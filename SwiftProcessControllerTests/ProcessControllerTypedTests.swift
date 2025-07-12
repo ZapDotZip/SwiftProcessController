@@ -35,9 +35,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/bin/echo", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON, errHandler: blankErrHandler)
+		let pc = ProcessControllerTyped.init(executablePath: "/bin/echo", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON)
 		let testResult = decodableObj(id: 0, value: "abc")
 		try pc.launchAndWaitUntilExit(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
@@ -48,9 +53,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON, errHandler: blankErrHandler)
+		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON)
 		let testResult = decodableObj(id: 0, value: "abc")
 		try pc.launchAndWaitUntilExit(args: [String(data: jsonEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
@@ -61,9 +71,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON, errHandler: blankErrHandler)
+		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .JSON)
 		let stdin = Pipe()
 		pc.standardInput = stdin
 		let dq = DispatchQueue(label: "test.async")
@@ -94,9 +109,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
 		let testResult = decodableObj(id: 0, value: "abc")
 		var encoded: Data = try plistEncoder.encode(testResult)
 		encoded.append("\\0".data(using: .utf8)!)
@@ -109,9 +129,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
 		let testResult = decodableObj(id: 0, value: "abc")
 		try pc.launchAndWaitUntilExit(args: [String(data: plistEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
@@ -122,9 +147,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
 		var results: [decodableObj] = []
-		let inHandler: (decodableObj) -> Void = { d in results.append(d) }
+		let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+			switch s {
+				case .object(output: let output): results.append(output)
+				case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+			}
+		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
 		let stdin = Pipe()
 		pc.standardInput = stdin
 		let dq = DispatchQueue(label: "test.async")
@@ -155,8 +185,13 @@ final class ProcessControllerTypedTests: XCTestCase {
 		self.measure {
 			let termHandler: terminationHandler = { _ in }
 			var results: [decodableObj] = []
-			let inHandler: (decodableObj) -> Void = { d in results.append(d) }
-			let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, errHandler: blankErrHandler, separator: ProcessController.separatorNulChar)
+			let inHandler: (StreamingProcessResult<decodableObj>) -> Void = { s in
+				switch s {
+					case .object(output: let output): results.append(output)
+					case .error(rawData: _, err: let err): XCTFail("Error decoding: \(err)")
+				}
+			}
+			let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
 			let dq = DispatchQueue(label: "test.async")
 			let TEST_COUNT = 1_250
 			dq.async { [self] in

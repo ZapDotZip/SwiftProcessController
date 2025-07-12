@@ -18,6 +18,12 @@ public enum ProcessResultDecoder {
 	case PropertyList
 }
 
+/// Decoded object or error from attempted decoding of data.
+public enum StreamingProcessResult<T> {
+	case object(output: T)
+	case error(rawData: Data, err: Error)
+}
+
 public enum ProcessState {
 	/// There is no running process.
 	case notRunning

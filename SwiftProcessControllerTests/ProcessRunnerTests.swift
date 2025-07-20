@@ -30,7 +30,7 @@ final class ProcessRunnerTests: XCTestCase {
 		XCTAssertEqual(resTrue.outputString(), "")
 		XCTAssertEqual(resTrue.errorString(), "")
 		XCTAssertEqual(resTrue.exitStatus, 0)
-		let url = URL(fileURLWithPath: "/usr/bin/false")
+		let url = URL(localPath: "/usr/bin/false")
 		let runFalse = ProcessRunner(executableURL: url)
 		let resFalse = try runFalse.run(args: [])
 		XCTAssertEqual(resFalse.exitStatus, 1)
@@ -92,7 +92,7 @@ final class ProcessRunnerTests: XCTestCase {
 		XCTAssertEqual(res, "/tmp\n")
 		
 		let run2 = ProcessRunner(executablePath: "/bin/pwd")
-		run2.currentDirectory = URL(fileURLWithPath: "/usr/bin")
+		run2.currentDirectory = URL(localPath: "/usr/bin")
 		let res2 = try run2.run(args: []).outputString()
 		XCTAssertEqual(res2, "/usr/bin\n")
 	}

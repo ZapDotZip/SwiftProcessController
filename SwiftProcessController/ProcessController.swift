@@ -28,7 +28,7 @@ public class ProcessController: SPCBaseController {
 	///   - stderrHandler: Repeatedly called when new data is present in stderr.
 	///   - terminationHandler: Called when the process exits.
 	public convenience init(executablePath: String, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
-		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
+		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
 	
 	/// Launches the command for monitoring. Returns after starting the process.

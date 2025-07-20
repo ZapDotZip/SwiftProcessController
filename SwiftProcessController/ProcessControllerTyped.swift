@@ -32,7 +32,7 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 	}
 	
 	public convenience init(executablePath: String, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
-		self.init(executableURL: URL(fileURLWithPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, separator: separator)
+		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, separator: separator)
 	}
 	
 	/// Creates the `T` object from the provided JSON data, then calls the objectHandler on the object.

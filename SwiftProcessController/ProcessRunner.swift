@@ -14,7 +14,7 @@ public class ProcessRunner: SPCBase {
 	}
 	
 	public convenience init(executablePath: String) {
-		self.init(executableURL: URL(fileURLWithPath: executablePath))
+		self.init(executableURL: URL(localPath: executablePath))
 	}
 	
 	// MARK: Run

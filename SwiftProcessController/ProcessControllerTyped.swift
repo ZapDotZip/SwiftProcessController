@@ -42,7 +42,7 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 			let obj = try jsonDecoder.decode(T.self, from: data)
 			objectHandler(StreamingProcessResult.object(output: obj))
 		} catch {
-			objectHandler(StreamingProcessResult.error(rawData: data, err: error))
+			objectHandler(StreamingProcessResult.error(rawData: data, decodingError: error))
 		}
 	}
 	
@@ -53,7 +53,7 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 			let obj = try plistDecoder.decode(T.self, from: data)
 			objectHandler(StreamingProcessResult.object(output: obj))
 		} catch {
-			objectHandler(StreamingProcessResult.error(rawData: data, err: error))
+			objectHandler(StreamingProcessResult.error(rawData: data, decodingError: error))
 		}
 	}
 	

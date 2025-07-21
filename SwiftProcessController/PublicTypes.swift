@@ -20,8 +20,12 @@ public enum ProcessResultDecoder {
 
 /// Decoded object or error from attempted decoding of data.
 public enum StreamingProcessResult<T> {
+	/// The decoded object.
 	case object(output: T)
-	case error(rawData: Data, err: Error)
+	/// The error that occured while trying to decode the data.
+	/// - Parameter rawData: The data that could not be decoded.
+	/// - Parameter decodingError: The error that occured while trying to decode the data.
+	case error(rawData: Data, decodingError: Error)
 }
 
 public enum ProcessState {

@@ -73,17 +73,17 @@ final class ProcessRunnerTests: XCTestCase {
 	}
 	
 	func testJSONReturnType() throws {
-		struct decodableJSON: Codable, Equatable {
+		struct DecodableJSON: Codable, Equatable {
 			let str: String
 			let number: Int
 			let fun_number: Double
 			let dict: [String : String]
 			let arr: [Bool]
 		}
-		let sample_output = decodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test\nmultiline\nstring"], arr: [true, false, true, true, false])
+		let testOutput = DecodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test\nmultiline\nstring"], arr: [true, false, true, true, false])
 		let run = ProcessRunner(executablePath: "/bin/echo")
-		let res = try run.run(args: [String(data: JSONEncoder().encode(sample_output), encoding: .utf8)!], returning: decodableJSON.self)
-		XCTAssertEqual(res.output, sample_output)
+		let res = try run.run(args: [String(data: JSONEncoder().encode(testOutput), encoding: .utf8)!], returning: DecodableJSON.self)
+		XCTAssertEqual(res.output, testOutput)
 	}
 	
 	func testCurrentDirectory() throws {

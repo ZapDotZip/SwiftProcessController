@@ -8,11 +8,13 @@ import XCTest
 
 final class ProcessControllerTests: XCTestCase {
 	var stdinData = Data()
-	var inHandler: pipedDataHandler = { d in XCTFail("Unset closure!") }
+	var inHandler: PipedDataHandler = { _ in XCTFail("Unset closure!") }
 	var stderrData = Data()
-	var errHandler: pipedDataHandler = { d in XCTFail("Unset closure!") }
+	var errHandler: PipedDataHandler = { _ in XCTFail("Unset closure!") }
 	var exitCode: Int32?
-	var termHandler: terminationHandler = { code in XCTFail("Unset closure!") }
+	var termHandler: TerminationHandler = { _ in XCTFail("Unset closure!") }
+	
+	let dispatchQueue = DispatchQueue(label: "test.async")
 	
 	override func setUpWithError() throws {
 		stdinData = Data()
@@ -51,8 +53,7 @@ final class ProcessControllerTests: XCTestCase {
 		let inputArr = (1...100).map { i in
 			return "line \(i)"
 		}.joined(separator: "\n")
-		let dq = DispatchQueue(label: "test.async")
-		dq.async {
+		dispatchQueue.async {
 			do {
 				try input.fileHandleForWriting.write(contentsOf: inputArr.data(using: .ascii)!)
 				try input.fileHandleForWriting.close()
@@ -71,8 +72,7 @@ final class ProcessControllerTests: XCTestCase {
 		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let standardInput = Pipe()
 		pc.standardInput = standardInput
-		let dq = DispatchQueue(label: "test.async")
-		dq.async {
+		dispatchQueue.async {
 			do {
 				try standardInput.fileHandleForWriting.write(contentsOf: "echo hello\n".data(using: .ascii)!)
 				try standardInput.fileHandleForWriting.write(contentsOf: "echo hello\n".data(using: .ascii)!)
@@ -91,18 +91,17 @@ final class ProcessControllerTests: XCTestCase {
 		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
 		let input = Pipe()
 		pc.standardInput = input
-		let dq = DispatchQueue(label: "test.async")
 		var inResult = ""
 		var errResult = ""
-		dq.async {
+		dispatchQueue.async {
 			do {
 				for i in 0...2500 {
-					if ((i % 3) == 0) {
+					if (i % 3) == 0 {
 						let inLine = "echo line \(i)\n"
 						try input.fileHandleForWriting.write(contentsOf: inLine.data(using: .ascii)!)
 						inResult += "line \(i)\n"
 					}
-					if ((i % 5) == 0) {
+					if (i % 5) == 0 {
 						let errLine = "echo line \(i) >&2\n"
 						try input.fileHandleForWriting.write(contentsOf: errLine.data(using: .ascii)!)
 						errResult += "line \(i)\n"

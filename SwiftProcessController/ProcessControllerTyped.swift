@@ -7,19 +7,19 @@ import Foundation
 
 /// An object which launches a proess and decodes output to an object as it is generated.
 public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
-	public typealias typedHandler = (StreamingProcessResult<T>) -> Void
-	public typealias errorHandler = (Error, Data) -> Void
+	public typealias TypedHandler = (StreamingProcessResult<T>) -> Void
+	public typealias ErrorHandler = (Error, Data) -> Void
 	
-	private let objectHandler: typedHandler
+	private let objectHandler: TypedHandler
 	private let separator: UInt8
-	private var decoderFunc: pipedDataHandler!
+	private var decoderFunc: PipedDataHandler!
 	
 	private let jsonDecoder = JSONDecoder()
 	private let plistDecoder = PropertyListDecoder()
 	
 	private var partial = Data()
 	
-	public init(executableURL: URL, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
+	public init(executableURL: URL, stdoutHandler: @escaping TypedHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
 		self.objectHandler = stdoutHandler
 		self.separator = separator
 		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
@@ -31,7 +31,7 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		}
 	}
 	
-	public convenience init(executablePath: String, stdoutHandler: @escaping typedHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
+	public convenience init(executablePath: String, stdoutHandler: @escaping TypedHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler, decoderType: ProcessResultDecoder, separator: UInt8 = separatorNewLine) {
 		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, separator: separator)
 	}
 	
@@ -69,8 +69,8 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		} else {
 			partial = Data()
 		}
-		for i in splits {
-			decoderFunc(i)
+		for split in splits {
+			decoderFunc(split)
 		}
 	}
 	
@@ -90,7 +90,7 @@ public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
 		
-		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = typedExitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))

@@ -5,8 +5,8 @@
 
 import Foundation
 
-public typealias pipedDataHandler = (Data) -> Void
-public typealias terminationHandler = (Int32) -> Void
+public typealias PipedDataHandler = (Data) -> Void
+public typealias TerminationHandler = (Int32) -> Void
 
 public enum ProcessControllerError: Error {
 	case couldNotDecodeStringOutput

@@ -26,15 +26,13 @@ public class SPCBase {
 	
 	/// The state of the process.
 	public var processState: ProcessState {
-		get {
-			guard currentlyRunningProcess != nil else {
-				return .notRunning
-			}
-			if isSuspended {
-				return .suspended
-			} else {
-				return .running
-			}
+		guard currentlyRunningProcess != nil else {
+			return .notRunning
+		}
+		if isSuspended {
+			return .suspended
+		} else {
+			return .running
 		}
 	}
 	
@@ -112,7 +110,7 @@ public class SPCBase {
 	///   - standardError: Pipe for the process's error
 	///   - args: Process arguments
 	/// - Returns: New Process object
-	func CreateProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
+	func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
 		let proc = Process()
 		proc.executableURL = executableURL
 		proc.standardOutput = standardOutput
@@ -137,10 +135,10 @@ public class SPCBaseController: SPCBase {
 	public static let separatorNewLine: UInt8 = 0x0A
 	public static let separatorNulChar: UInt8 = 0x00
 
-	var stderrHandler: pipedDataHandler
-	var termHandler: terminationHandler
+	var stderrHandler: PipedDataHandler
+	var termHandler: TerminationHandler
 	
-	init(executableURL: URL, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+	init(executableURL: URL, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
 		termHandler = terminationHandler
 		self.stderrHandler = stderrHandler
 		super.init(executableURL: executableURL)
@@ -153,9 +151,9 @@ public class SPCBaseController: SPCBase {
 	}
 	
 	/// Sets a read handler to repeatedly recieve data from a FileHandle
-	func setupReadHandler(fileHandle: FileHandle, handler: @escaping pipedDataHandler) {
-		fileHandle.readabilityHandler = { fh in
-			handler(fh.availableData)
+	func setupReadHandler(fileHandle: FileHandle, handler: @escaping PipedDataHandler) {
+		fileHandle.readabilityHandler = { fileHandle in
+			handler(fileHandle.availableData)
 		}
 	}
 	
@@ -189,12 +187,10 @@ internal extension URL {
 	
 	/// Returns the path component of the URL, like `.path` and `.path()` (macOS 13+), suitable for displaying a local file path to the user.
 	var localPath: String {
-		get {
-			if #available(macOS 13.0, *) {
-				return self.path()
-			} else {
-				return self.path
-			}
+		if #available(macOS 13.0, *) {
+			return self.path()
+		} else {
+			return self.path
 		}
 	}
 }

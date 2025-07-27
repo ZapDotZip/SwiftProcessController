@@ -17,6 +17,7 @@ final class SPCBaseProcessStateTests: XCTestCase {
 		// Put teardown code here. This method is called after the invocation of each test method in the class.
 	}
 	
+	let dispatchQueue = DispatchQueue(label: "test")
 	
 	func testSuspendResume() throws {
 		let run = ProcessRunner(executablePath: "/bin/cat")
@@ -24,8 +25,7 @@ final class SPCBaseProcessStateTests: XCTestCase {
 		run.standardInput = stdin
 		XCTAssertEqual(run.isSuspended, false)
 		XCTAssertEqual(run.processState, .notRunning)
-		let dq = DispatchQueue(label: "test")
-		dq.async {
+		dispatchQueue.async {
 			let res = try! run.run(args: [])
 			XCTAssertEqual(res.exitStatus, 15)
 		}

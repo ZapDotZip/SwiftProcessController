@@ -25,7 +25,7 @@ public class ProcessRunner: SPCBase {
 		let standardOut = Pipe()
 		let standardErr = Pipe()
 		
-		let proc = CreateProcessObject(standardOutput: standardOut, standardError: standardErr, args: args)
+		let proc = createProcessObject(standardOutput: standardOut, standardError: standardErr, args: args)
 		
 		try proc.run()
 		currentlyRunningProcess = proc

@@ -8,7 +8,7 @@ import Foundation
 /// An object which launches a proess and handles output as it is generated.
 public class ProcessController: SPCBaseController {
 	
-	private var stdoutHandler: pipedDataHandler
+	private var stdoutHandler: PipedDataHandler
 	
 	/// Creates a ProcessController object.
 	/// - Parameters:
@@ -16,7 +16,7 @@ public class ProcessController: SPCBaseController {
 	///   - stdoutHandler: Repeatedly called when new data is present in stdout.
 	///   - stderrHandler: Repeatedly called when new data is present in stderr.
 	///   - terminationHandler: Called when the process exits.
-	public init(executableURL: URL, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+	public init(executableURL: URL, stdoutHandler: @escaping PipedDataHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
 		self.stdoutHandler = stdoutHandler
 		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
@@ -27,7 +27,7 @@ public class ProcessController: SPCBaseController {
 	///   - stdoutHandler: Repeatedly called when new data is present in stdout.
 	///   - stderrHandler: Repeatedly called when new data is present in stderr.
 	///   - terminationHandler: Called when the process exits.
-	public convenience init(executablePath: String, stdoutHandler: @escaping pipedDataHandler, stderrHandler: @escaping pipedDataHandler, terminationHandler: @escaping terminationHandler) {
+	public convenience init(executablePath: String, stdoutHandler: @escaping PipedDataHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
 		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
 	}
 	
@@ -38,7 +38,7 @@ public class ProcessController: SPCBaseController {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
 		
-		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
@@ -54,7 +54,7 @@ public class ProcessController: SPCBaseController {
 		let standardOutput = Pipe()
 		let standardError = Pipe()
 		
-		let proc = CreateProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)

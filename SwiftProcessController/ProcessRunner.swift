@@ -7,8 +7,6 @@ import Foundation
 
 public class ProcessRunner: SPCBase {
 	
-	private static let jsonDecoder = JSONDecoder()
-	
 	public override init(executableURL: URL) {
 		super.init(executableURL: executableURL)
 	}
@@ -40,9 +38,16 @@ public class ProcessRunner: SPCBase {
 	/// - Parameters:
 	///   - args: The list of arguments to use.
 	///   - returning: The object type to return.
-	public func run<T: Decodable>(args: [String], returning: T.Type) throws -> ProcessResultTyped<T> {
+	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCProcessResultDecoder) throws -> ProcessResultTyped<T> {
 		let result = try run(args: args)
-		let obj = try ProcessRunner.jsonDecoder.decode(T.self, from: result.output)
+		let obj = try {
+			switch decodingWith {
+			case .JSON:
+				return try ProcessRunner.jsonDecoder.decode(T.self, from: result.output)
+			case .PropertyList:
+				return try ProcessRunner.plistDecoder.decode(T.self, from: result.output)
+			}
+		}()
 		return ProcessResultTyped(output: obj, error: result.error, exitStatus: result.exitStatus)
 	}
 	

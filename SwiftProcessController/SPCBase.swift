@@ -36,6 +36,10 @@ public class SPCBase {
 		}
 	}
 	
+	internal static let jsonDecoder = JSONDecoder()
+	internal static let plistDecoder = PropertyListDecoder()
+	
+	
 	init(executableURL: URL) {
 		self.executableURL = executableURL
 	}

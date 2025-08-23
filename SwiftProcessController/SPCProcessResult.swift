@@ -1,11 +1,11 @@
 //
-//  ProcessResult.swift
+//  SPCProcessResult.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
-public struct ProcessResult {
+public struct SPCProcessResult {
 	public let output: Data
 	public let error: Data
 	public let exitStatus: Int32
@@ -17,7 +17,7 @@ public struct ProcessResult {
 	}
 }
 
-public struct ProcessResultTyped<T> {
+public struct SPCProcessResultTyped<T> {
 	public let output: T
 	public let error: Data
 	public let exitStatus: Int32

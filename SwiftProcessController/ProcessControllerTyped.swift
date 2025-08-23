@@ -6,7 +6,7 @@
 import Foundation
 
 /// An object which launches a proess and decodes output to an object as it is generated.
-public class ProcessControllerTyped<T: Decodable>: SPCBaseController {
+public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
 	public typealias TypedHandler = (StreamingProcessResult<T>) -> Void
 	public typealias ErrorHandler = (Error, Data) -> Void
 	

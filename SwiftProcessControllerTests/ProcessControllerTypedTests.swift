@@ -69,6 +69,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		XCTAssertEqual(results[0], testResult)
 	}
 	
+	@available(macOS 10.15.4, *)
 	func testManyLines() throws {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
@@ -117,7 +118,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 			}
 		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
 		let testResult = DecodableObj(id: 0, value: "abc")
 		var encoded: Data = try plistEncoder.encode(testResult)
 		encoded.append(Data("\\0".utf8))
@@ -137,13 +138,14 @@ final class ProcessControllerTypedTests: XCTestCase {
 			}
 		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
 		let testResult = DecodableObj(id: 0, value: "abc")
 		try pc.launchAndWaitUntilExit(args: [String(data: plistEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(exitCode, 0)
 		XCTAssertEqual(results[0], testResult)
 	}
 	
+	@available(macOS 10.15.4, *)
 	func testPlistManyLines() throws {
 		var exitCode: Int32 = -1
 		let termHandler = { code in exitCode = code }
@@ -155,7 +157,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 			}
 		}
 		
-		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
+		let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
 		let stdin = Pipe()
 		pc.standardInput = stdin
 		let TEST_COUNT = 1_000
@@ -181,6 +183,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 		XCTAssertEqual(results[TEST_COUNT + 1].value.count, 5000)
 	}
 	
+	@available(macOS 10.15.4, *)
 	func testPlistPerformance() {
 		self.measure {
 			let termHandler: TerminationHandler = { _ in }
@@ -191,7 +194,7 @@ final class ProcessControllerTypedTests: XCTestCase {
 					case .error(rawData: _, decodingError: let err): XCTFail("Error decoding: \(err)")
 				}
 			}
-			let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: ProcessController.separatorNulChar)
+			let pc = ProcessControllerTyped.init(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: stdErrHandler, terminationHandler: termHandler, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
 			let testCount = 1_250
 			dispatchQueue.async { [self] in
 				let procstdin = Pipe()

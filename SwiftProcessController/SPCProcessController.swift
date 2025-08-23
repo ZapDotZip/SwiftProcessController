@@ -6,11 +6,11 @@
 import Foundation
 
 /// An object which launches a proess and handles output as it is generated.
-public class ProcessController: SPCBaseController {
+public class SPCProcessController: _SPCBaseController {
 	
 	private let delegate: SPCProcessDelegate
 	
-	/// Creates a ProcessController object.
+	/// Creates an SPCProcessController object.
 	/// - Parameters:
 	///   - executableURL: The executable binary to run.
 	///   - delegate: Repeatedly called when the process outputs new data to stdout, stderr, or when the process exits.
@@ -19,7 +19,7 @@ public class ProcessController: SPCBaseController {
 		super.init(executableURL: executableURL, stderrHandler: delegate.stderrHandler, terminationHandler: delegate.terminationHandler(exitCode:))
 	}
 	
-	/// Creates a ProcessController object.
+	/// Creates an SPCProcessController object.
 	/// - Parameters:
 	///   - executablePath: The executable binary to run.
 	///   - delegate: Repeatedly called when the process outputs new data to stdout, stderr, or when the process exits.

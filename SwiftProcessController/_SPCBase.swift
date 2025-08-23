@@ -1,13 +1,13 @@
 //
-//  SPCBase.swift
+//  _SPCBase.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
-/// A base class to hold functionailty for both `ProcessRunner` and `ProcessController`.
+/// A base class to hold functionailty for both `ProcessRunner` and `SPCProcessController`.
 /// > Warning: Do not use directly.
-public class SPCBase {
+public class _SPCBase {
 	/// The location of the binary to execute.
 	public var executableURL: URL
 	/// The enviorment to use when running the process. If set to `nil`, the process will inherit the parent's enviorment. If set to an empty dictionary, the process will have no enviorment.
@@ -99,11 +99,11 @@ public class SPCBase {
 	/// Sends the signal to the process.
 	/// > Warning: Do not use `SIGSTOP`/`SIGCONT` and the `suspend()`/`resume()` functions at the same time.
 	/// - Parameter signal: The signal to send.
-	public func signal(signal: Int32) throws(SignalError) {
+	public func signal(signal: Int32) throws(SPCSignalError) {
 		if let currentlyRunningProcess {
 			let res = _signal.kill(currentlyRunningProcess.processIdentifier, SIGTERM)
 			if res != 0 {
-				throw SignalError(errCode: res)
+				throw SPCSignalError(errCode: res)
 			}
 		}
 	}
@@ -131,70 +131,5 @@ public class SPCBase {
 		}
 		proc.qualityOfService = qualityOfService
 		return proc
-	}
-}
-
-/// A base class to hold functionailty for ProcessController. Do not use directly.
-public class SPCBaseController: SPCBase {
-	public static let separatorNewLine: UInt8 = 0x0A
-	public static let separatorNulChar: UInt8 = 0x00
-
-	var stderrHandler: PipedDataHandler
-	var termHandler: TerminationHandler
-	
-	init(executableURL: URL, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
-		termHandler = terminationHandler
-		self.stderrHandler = stderrHandler
-		super.init(executableURL: executableURL)
-	}
-	
-	/// Default exit handler which sets the current process to nil and calls the user-provided `termHandler`.
-	func exitHandler(_ p: Process) {
-		currentlyRunningProcess = nil
-		termHandler(p.terminationStatus)
-	}
-	
-	/// Sets a read handler to repeatedly recieve data from a FileHandle
-	func setupReadHandler(fileHandle: FileHandle, handler: @escaping PipedDataHandler) {
-		fileHandle.readabilityHandler = { fileHandle in
-			handler(fileHandle.availableData)
-		}
-	}
-	
-	/// Starts the process.
-	/// - Parameter proc: The process to start
-	func startProcess(proc: Process) throws {
-		try proc.run()
-		currentlyRunningProcess = proc
-	}
-	
-	/// Starts the process and waits for it to exit.
-	/// - Parameter proc: The process to start
-	func startProcessAndWaitUntilExit(proc: Process) throws {
-		try proc.run()
-		currentlyRunningProcess = proc
-		proc.waitUntilExit()
-	}
-	
-}
-
-internal extension URL {
-	/// Creates a file URL that references a local path string, like `init(fileURLWithPath: String)` and `init(filePath: String)` (macOS 13+).
-	/// - Parameter localPath: The location in the file system, as a string.
-	init(localPath: String) {
-		if #available(macOS 13.0, *) {
-			self.init(filePath: localPath)
-		} else {
-			self.init(fileURLWithPath: localPath)
-		}
-	}
-	
-	/// Returns the path component of the URL, like `.path` and `.path()` (macOS 13+), suitable for displaying a local file path to the user.
-	var localPath: String {
-		if #available(macOS 13.0, *) {
-			return self.path()
-		} else {
-			return self.path
-		}
 	}
 }

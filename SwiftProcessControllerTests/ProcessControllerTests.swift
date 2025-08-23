@@ -31,6 +31,7 @@ final class ProcessControllerTests: XCTestCase {
 	let dispatchQueue = DispatchQueue(label: "test.async")
 	
 	override func setUpWithError() throws {
+		
 	}
 	
 	override func tearDownWithError() throws {
@@ -39,7 +40,7 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testSimple() throws {
 		let result = ResultTester()
-		let pc = ProcessController(executablePath: "/usr/bin/printf", delegate: result)
+		let pc = SPCProcessController(executablePath: "/usr/bin/printf", delegate: result)
 		try pc.launchAndWaitUntilExit(args: ["testing"])
 		XCTAssertEqual(result.exitCode, 0)
 		XCTAssertEqual(result.out, "testing")
@@ -48,16 +49,17 @@ final class ProcessControllerTests: XCTestCase {
 	
 	func testSimpleExitCode() throws {
 		let result = ResultTester()
-		let pc = ProcessController(executablePath: "/usr/bin/false", delegate: result)
+		let pc = SPCProcessController(executablePath: "/usr/bin/false", delegate: result)
 		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(result.exitCode, 1)
 		XCTAssertEqual(result.out.count, 0)
 		XCTAssertEqual(result.err.count, 0)
 	}
-
+	
+	@available(macOS 10.15.4, *)
 	func testMultiLine() throws {
 		let result = ResultTester()
-		let pc = ProcessController(executablePath: "/bin/cat", delegate: result)
+		let pc = SPCProcessController(executablePath: "/bin/cat", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		let inputArr = (1...100).map { i in
@@ -78,9 +80,10 @@ final class ProcessControllerTests: XCTestCase {
 		XCTAssertEqual(result.err.count, 0)
 	}
 	
+	@available(macOS 10.15.4, *)
 	func testSimpleCommand() throws {
 		let result = ResultTester()
-		let pc = ProcessController(executablePath: "/bin/sh", delegate: result)
+		let pc = SPCProcessController(executablePath: "/bin/sh", delegate: result)
 		let standardInput = Pipe()
 		pc.standardInput = standardInput
 		dispatchQueue.async {
@@ -98,9 +101,10 @@ final class ProcessControllerTests: XCTestCase {
 		XCTAssertEqual(result.err.count, 0)
 	}
 	
+	@available(macOS 10.15.4, *)
 	func testMultiLineWithError() throws {
 		let result = ResultTester()
-		let pc = ProcessController(executablePath: "/bin/sh", delegate: result)
+		let pc = SPCProcessController(executablePath: "/bin/sh", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		var inResult = ""

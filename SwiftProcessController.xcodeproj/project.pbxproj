@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165762DEF796200D54348 /* PublicTypes.swift */; };
 		ED5165792DEF7A0F00D54348 /* ProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */; };
+		ED6910E72E59398800511440 /* SPCProcessDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910E62E59398800511440 /* SPCProcessDelegate.swift */; };
 		ED7D6BE02DF23DFB000DDEAF /* ProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */; };
 		ED7D6BE12DF23DFB000DDEAF /* ProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* ProcessControllerTests.swift */; };
 		ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */; };
@@ -34,6 +35,7 @@
 /* Begin PBXFileReference section */
 		ED5165762DEF796200D54348 /* PublicTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTypes.swift; sourceTree = "<group>"; };
 		ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunner.swift; sourceTree = "<group>"; };
+		ED6910E62E59398800511440 /* SPCProcessDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessDelegate.swift; sourceTree = "<group>"; };
 		ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunnerTests.swift; sourceTree = "<group>"; };
 		ED7D6BDE2DF23DFB000DDEAF /* ProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessControllerTests.swift; sourceTree = "<group>"; };
 		ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessResult.swift; sourceTree = "<group>"; };
@@ -81,9 +83,10 @@
 			isa = PBXGroup;
 			children = (
 				EDE235D62DF65C3D0065798F /* SPCBase.swift */,
+				ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */,
+				ED6910E62E59398800511440 /* SPCProcessDelegate.swift */,
 				EDB418492DEF759A005DF93C /* ProcessController.swift */,
 				EDED9B902DFCF2B500D59E80 /* ProcessControllerTyped.swift */,
-				ED5165782DEF7A0C00D54348 /* ProcessRunner.swift */,
 				ED7D6BE22DF25E9B000DDEAF /* ProcessResult.swift */,
 				ED5165762DEF796200D54348 /* PublicTypes.swift */,
 				EDB418482DEF759A005DF93C /* SwiftProcessController.docc */,
@@ -225,6 +228,7 @@
 				EDED9B912DFCF2B500D59E80 /* ProcessControllerTyped.swift in Sources */,
 				EDB4184C2DEF759A005DF93C /* SwiftProcessController.docc in Sources */,
 				ED5165792DEF7A0F00D54348 /* ProcessRunner.swift in Sources */,
+				ED6910E72E59398800511440 /* SPCProcessDelegate.swift in Sources */,
 				ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */,
 				EDB4184D2DEF759A005DF93C /* ProcessController.swift in Sources */,
 				ED7D6BE32DF25E9E000DDEAF /* ProcessResult.swift in Sources */,
@@ -403,7 +407,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = zap.zip.SwiftProcessController;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;
@@ -436,7 +440,7 @@
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
 				PRODUCT_BUNDLE_IDENTIFIER = zap.zip.SwiftProcessController;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = NO;
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_MODULE = YES;
 				SWIFT_INSTALL_OBJC_HEADER = YES;

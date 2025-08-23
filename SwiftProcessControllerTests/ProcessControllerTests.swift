@@ -7,23 +7,30 @@ import XCTest
 @testable import SwiftProcessController
 
 final class ProcessControllerTests: XCTestCase {
-	var stdinData = Data()
-	var inHandler: PipedDataHandler = { _ in XCTFail("Unset closure!") }
-	var stderrData = Data()
-	var errHandler: PipedDataHandler = { _ in XCTFail("Unset closure!") }
-	var exitCode: Int32?
-	var termHandler: TerminationHandler = { _ in XCTFail("Unset closure!") }
+	class ResultTester: SPCProcessDelegate {
+		var out = String()
+		func stdoutHandler(_ output: Data) {
+			if let newData = String(data: output, encoding: .ascii) {
+				out += newData
+			}
+		}
+		var err = String()
+		func stderrHandler(_ output: Data) {
+			if let newData = String(data: output, encoding: .ascii) {
+				err += newData
+			}
+		}
+		var exitCode: Int32?
+		func terminationHandler(exitCode: Int32) {
+			self.exitCode = exitCode
+		}
+		
+		
+	}
 	
 	let dispatchQueue = DispatchQueue(label: "test.async")
 	
 	override func setUpWithError() throws {
-		stdinData = Data()
-		inHandler = { d in self.stdinData.append(d) }
-		stderrData = Data()
-		errHandler = { d in self.stderrData.append(d) }
-		exitCode = nil
-		termHandler = { code in self.exitCode = code }
-
 	}
 	
 	override func tearDownWithError() throws {
@@ -31,23 +38,26 @@ final class ProcessControllerTests: XCTestCase {
 	}
 	
 	func testSimple() throws {
-		let pc = ProcessController(executablePath: "/usr/bin/printf", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
+		let result = ResultTester()
+		let pc = ProcessController(executablePath: "/usr/bin/printf", delegate: result)
 		try pc.launchAndWaitUntilExit(args: ["testing"])
-		XCTAssertEqual(exitCode, 0)
-		XCTAssertEqual(String(data: stdinData, encoding: .ascii), "testing")
-		XCTAssertEqual(stderrData.count, 0)
+		XCTAssertEqual(result.exitCode, 0)
+		XCTAssertEqual(result.out, "testing")
+		XCTAssertEqual(result.err.count, 0)
 	}
 	
 	func testSimpleExitCode() throws {
-		let pc = ProcessController(executablePath: "/usr/bin/false", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
+		let result = ResultTester()
+		let pc = ProcessController(executablePath: "/usr/bin/false", delegate: result)
 		try pc.launchAndWaitUntilExit(args: [])
-		XCTAssertEqual(exitCode, 1)
-		XCTAssertEqual(stdinData.count, 0)
-		XCTAssertEqual(stderrData.count, 0)
+		XCTAssertEqual(result.exitCode, 1)
+		XCTAssertEqual(result.out.count, 0)
+		XCTAssertEqual(result.err.count, 0)
 	}
 
 	func testMultiLine() throws {
-		let pc = ProcessController(executablePath: "/bin/cat", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
+		let result = ResultTester()
+		let pc = ProcessController(executablePath: "/bin/cat", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		let inputArr = (1...100).map { i in
@@ -63,13 +73,14 @@ final class ProcessControllerTests: XCTestCase {
 		}
 		
 		try pc.launchAndWaitUntilExit(args: [])
-		XCTAssertEqual(exitCode, 0)
-		XCTAssertEqual(String(data: stdinData, encoding: .ascii), inputArr)
-		XCTAssertEqual(stderrData.count, 0)
+		XCTAssertEqual(result.exitCode, 0)
+		XCTAssertEqual(result.out, inputArr)
+		XCTAssertEqual(result.err.count, 0)
 	}
 	
 	func testSimpleCommand() throws {
-		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
+		let result = ResultTester()
+		let pc = ProcessController(executablePath: "/bin/sh", delegate: result)
 		let standardInput = Pipe()
 		pc.standardInput = standardInput
 		dispatchQueue.async {
@@ -82,13 +93,14 @@ final class ProcessControllerTests: XCTestCase {
 			}
 		}
 		try pc.launchAndWaitUntilExit(args: [])
-		XCTAssertEqual(exitCode, 0)
-		XCTAssertEqual(String(data: stdinData, encoding: .ascii), "hello\nhello\n")
-		XCTAssertEqual(stderrData.count, 0)
+		XCTAssertEqual(result.exitCode, 0)
+		XCTAssertEqual(result.out, "hello\nhello\n")
+		XCTAssertEqual(result.err.count, 0)
 	}
 	
 	func testMultiLineWithError() throws {
-		let pc = ProcessController(executablePath: "/bin/sh", stdoutHandler: inHandler, stderrHandler: errHandler, terminationHandler: termHandler)
+		let result = ResultTester()
+		let pc = ProcessController(executablePath: "/bin/sh", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		var inResult = ""
@@ -114,9 +126,9 @@ final class ProcessControllerTests: XCTestCase {
 		}
 		
 		try pc.launchAndWaitUntilExit(args: [])
-		XCTAssertEqual(exitCode, 0)
-		XCTAssertEqual(String(data: stdinData, encoding: .ascii), inResult)
-		XCTAssertEqual(String(data: stderrData, encoding: .ascii), errResult)
+		XCTAssertEqual(result.exitCode, 0)
+		XCTAssertEqual(result.out, inResult)
+		XCTAssertEqual(result.err, errResult)
 	}
 	
 }

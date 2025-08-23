@@ -8,27 +8,23 @@ import Foundation
 /// An object which launches a proess and handles output as it is generated.
 public class ProcessController: SPCBaseController {
 	
-	private var stdoutHandler: PipedDataHandler
+	private let delegate: SPCProcessDelegate
 	
 	/// Creates a ProcessController object.
 	/// - Parameters:
 	///   - executableURL: The executable binary to run.
-	///   - stdoutHandler: Repeatedly called when new data is present in stdout.
-	///   - stderrHandler: Repeatedly called when new data is present in stderr.
-	///   - terminationHandler: Called when the process exits.
-	public init(executableURL: URL, stdoutHandler: @escaping PipedDataHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
-		self.stdoutHandler = stdoutHandler
-		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
+	///   - delegate: Repeatedly called when the process outputs new data to stdout, stderr, or when the process exits.
+	public init(executableURL: URL, delegate: SPCProcessDelegate) {
+		self.delegate = delegate
+		super.init(executableURL: executableURL, stderrHandler: delegate.stderrHandler, terminationHandler: delegate.terminationHandler(exitCode:))
 	}
 	
 	/// Creates a ProcessController object.
 	/// - Parameters:
 	///   - executablePath: The executable binary to run.
-	///   - stdoutHandler: Repeatedly called when new data is present in stdout.
-	///   - stderrHandler: Repeatedly called when new data is present in stderr.
-	///   - terminationHandler: Called when the process exits.
-	public convenience init(executablePath: String, stdoutHandler: @escaping PipedDataHandler, stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler) {
-		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
+	///   - delegate: Repeatedly called when the process outputs new data to stdout, stderr, or when the process exits.
+	public convenience init(executablePath: String, delegate: SPCProcessDelegate) {
+		self.init(executableURL: URL(localPath: executablePath), delegate: delegate)
 	}
 	
 	/// Launches the command for monitoring. Returns after starting the process.
@@ -41,8 +37,8 @@ public class ProcessController: SPCBaseController {
 		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
-		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
-		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
+		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
 		
 		try startProcess(proc: proc)
 	}
@@ -57,8 +53,8 @@ public class ProcessController: SPCBaseController {
 		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
 		proc.terminationHandler = exitHandler(_:)
-		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.stdoutHandler)
-		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
+		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
+		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
 		
 		try startProcessAndWaitUntilExit(proc: proc)
 	}

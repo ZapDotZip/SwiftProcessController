@@ -21,7 +21,7 @@ public struct SPCProcessResultTyped<T> {
 	public let output: T
 	public let error: Data
 	public let exitStatus: Int32
-	public lazy var errorString: String? = {
+	public func errorString() -> String? {
 		String.init(data: error, encoding: .utf8)
-	}()
+	}
 }

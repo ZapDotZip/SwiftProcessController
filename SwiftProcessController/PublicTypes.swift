@@ -19,7 +19,7 @@ public enum SPCProcessResultDecoder {
 }
 
 /// Decoded object or error from attempted decoding of data.
-public enum StreamingProcessResult<T> {
+public enum SPCStreamingResult<T> {
 	/// The decoded object.
 	case object(output: T)
 	/// The error that occured while trying to decode the data.

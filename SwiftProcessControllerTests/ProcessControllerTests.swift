@@ -24,8 +24,6 @@ final class ProcessControllerTests: XCTestCase {
 		func terminationHandler(exitCode: Int32) {
 			self.exitCode = exitCode
 		}
-		
-		
 	}
 	
 	let dispatchQueue = DispatchQueue(label: "test.async")

@@ -36,7 +36,6 @@ public class SPCProcessController: _SPCBaseController {
 		
 		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
-		proc.terminationHandler = exitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
 		
@@ -52,7 +51,6 @@ public class SPCProcessController: _SPCBaseController {
 		
 		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
-		proc.terminationHandler = exitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
 		

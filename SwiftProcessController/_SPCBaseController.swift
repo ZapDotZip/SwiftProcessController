@@ -5,7 +5,8 @@
 
 import Foundation
 
-/// A base class to hold functionailty for SPCProcessController. Do not use directly.
+/// A base class to hold functionailty for SPCProcessController.
+/// > Warning: Do not use directly.
 public class _SPCBaseController: _SPCBase {
 	public static let separatorNewLine: UInt8 = 0x0A
 	public static let separatorNulChar: UInt8 = 0x00
@@ -45,6 +46,12 @@ public class _SPCBaseController: _SPCBase {
 		try proc.run()
 		currentlyRunningProcess = proc
 		proc.waitUntilExit()
+	}
+	
+	override func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
+		let proc = super.createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
+		proc.terminationHandler = exitHandler(_:)
+		return proc
 	}
 	
 }

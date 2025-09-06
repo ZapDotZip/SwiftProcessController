@@ -1,27 +1,25 @@
 //
-//  ProcessControllerTyped.swift
+//  SPCProcessControllerDecoder.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
 /// An object which launches a proess and decodes output to an object as it is generated.
-public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
-	public typealias TypedHandler = (StreamingProcessResult<T>) -> Void
+public class SPCProcessControllerDecoder<T: Decodable>: _SPCBaseController {
+	public typealias TypedHandler = (SPCStreamingResult<T>) -> Void
 	public typealias ErrorHandler = (Error, Data) -> Void
 	
-	private let objectHandler: TypedHandler
+	private let delegate: any SPCProcessDecoderDelegate<T>
 	private let separator: UInt8
 	private var decoderFunc: PipedDataHandler!
 	
 	private var partial = Data()
 	
-	public init(executableURL: URL, stdoutHandler: @escaping TypedHandler,
-				stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler,
-				decoderType: SPCProcessResultDecoder, separator: UInt8 = separatorNewLine) {
-		self.objectHandler = stdoutHandler
+	public init(executableURL: URL, delegate: any SPCProcessDecoderDelegate<T>, decoderType: SPCProcessResultDecoder, separator: UInt8 = separatorNewLine) {
 		self.separator = separator
-		super.init(executableURL: executableURL, stderrHandler: stderrHandler, terminationHandler: terminationHandler)
+		self.delegate = delegate
+		super.init(executableURL: executableURL, stderrHandler: delegate.stderrHandler(_:), terminationHandler: delegate.terminationHandler(exitCode:))
 		switch decoderType {
 			case .JSON:
 				decoderFunc = generateTypedObjectJSON
@@ -30,20 +28,18 @@ public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
 		}
 	}
 	
-	public convenience init(executablePath: String, stdoutHandler: @escaping TypedHandler,
-							stderrHandler: @escaping PipedDataHandler, terminationHandler: @escaping TerminationHandler,
-							decoderType: SPCProcessResultDecoder, separator: UInt8 = separatorNewLine) {
-		self.init(executableURL: URL(localPath: executablePath), stdoutHandler: stdoutHandler, stderrHandler: stderrHandler, terminationHandler: terminationHandler, decoderType: decoderType, separator: separator)
+	public convenience init(executablePath: String, delegate: any SPCProcessDecoderDelegate<T>, decoderType: SPCProcessResultDecoder, separator: UInt8 = separatorNewLine) {
+		self.init(executableURL: URL(localPath: executablePath), delegate: delegate, decoderType: decoderType, separator: separator)
 	}
 	
 	/// Creates the `T` object from the provided JSON data, then calls the objectHandler on the object.
 	/// - Parameter data: The data to decode into an object.
 	private func generateTypedObjectJSON(_ data: Data) {
 		do {
-			let obj = try ProcessControllerTyped<T>.jsonDecoder.decode(T.self, from: data)
-			objectHandler(StreamingProcessResult.object(output: obj))
+			let obj = try SPCProcessControllerDecoder<T>.jsonDecoder.decode(T.self, from: data)
+			delegate.stdoutHandler(SPCStreamingResult.object(output: obj))
 		} catch {
-			objectHandler(StreamingProcessResult.error(rawData: data, decodingError: error))
+			delegate.stdoutHandler(SPCStreamingResult.error(rawData: data, decodingError: error))
 		}
 	}
 	
@@ -51,10 +47,10 @@ public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
 	/// - Parameter data: The data to decode into an object.
 	private func generateTypedObjectPropertyList(_ data: Data) {
 		do {
-			let obj = try ProcessControllerTyped<T>.plistDecoder.decode(T.self, from: data)
-			objectHandler(StreamingProcessResult.object(output: obj))
+			let obj = try SPCProcessControllerDecoder<T>.plistDecoder.decode(T.self, from: data)
+			delegate.stdoutHandler(SPCStreamingResult.object(output: obj))
 		} catch {
-			objectHandler(StreamingProcessResult.error(rawData: data, decodingError: error))
+			delegate.stdoutHandler(SPCStreamingResult.error(rawData: data, decodingError: error))
 		}
 	}
 	
@@ -76,11 +72,11 @@ public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
 	}
 	
 	/// Ensures the rest of the data is processed before exiting.
-	func typedExitHandler(_ p: Process) {
+	override func exitHandler(_ p: Process) {
 		if partial.count != 0 {
 			decoderFunc(partial)
 		}
-		exitHandler(p)
+		super.exitHandler(p)
 	}
 	
 	/// Starts the process and returns, letting it run in the background.
@@ -93,7 +89,6 @@ public class ProcessControllerTyped<T: Decodable>: _SPCBaseController {
 		
 		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		
-		proc.terminationHandler = typedExitHandler(_:)
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		try startProcess(proc: proc)

@@ -20,7 +20,7 @@ public protocol SPCProcessDelegate {
 public protocol SPCProcessDecoderDelegate<D> {
 	associatedtype D: Decodable
 	/// Repeatedly called when new data is present in the process's `stdout`
-	func stdoutHandler(_: SPCStreamingResult<D>)
+	func stdoutHandler(_: SPCDecodedResult<D>)
 	/// Repeatedly called when new data is present in the process's `stderr`
 	func stderrHandler(_: Data)
 	/// Called when the process exits.

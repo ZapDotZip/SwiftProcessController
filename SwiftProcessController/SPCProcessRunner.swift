@@ -31,24 +31,19 @@ public class SPCProcessRunner: _SPCBase {
 		let err = standardErr.fileHandleForReading.readDataToEndOfFile()
 		proc.waitUntilExit()
 		currentlyRunningProcess = nil
-		return SPCProcessResult(output: out, error: err, exitStatus: proc.terminationStatus)
+		return SPCProcessResult(output: out, stdError: err, exitStatus: proc.terminationStatus)
 	}
 	
 	/// Runs with the provided arguments and returns the output as the provided Decodable class and stderr as a String, if any.
 	/// - Parameters:
 	///   - args: The list of arguments to use.
 	///   - returning: The object type to return.
-	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCProcessResultDecoder) throws -> SPCProcessResultTyped<T> {
+	///   - decodingWith: The type of decoder to use.
+	/// - Returns: A process result which contains the output, standard error, and exit status of the program.
+	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCProcessResultDecoder) throws -> SPCProcessResultDecoded<T> {
 		let result = try run(args: args)
-		let obj = try {
-			switch decodingWith {
-			case .JSON:
-				return try SPCProcessRunner.jsonDecoder.decode(T.self, from: result.output)
-			case .PropertyList:
-				return try SPCProcessRunner.plistDecoder.decode(T.self, from: result.output)
-			}
-		}()
-		return SPCProcessResultTyped(output: obj, error: result.error, exitStatus: result.exitStatus)
+		let obj = SPCDecodedResult.init(data: result.output, decoder: decodingWith, type: T.self)
+		return SPCProcessResultDecoded(output: obj, stdError: result.stdError, exitStatus: result.exitStatus)
 	}
 	
 }

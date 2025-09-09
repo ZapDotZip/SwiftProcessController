@@ -7,7 +7,7 @@ import Foundation
 
 /// An object which launches a proess and decodes output to an object as it is generated.
 public class SPCProcessControllerDecoder<T: Decodable>: _SPCBaseController {
-	public typealias TypedHandler = (SPCStreamingResult<T>) -> Void
+	public typealias TypedHandler = (SPCDecodedResult<T>) -> Void
 	public typealias ErrorHandler = (Error, Data) -> Void
 	
 	private let delegate: any SPCProcessDecoderDelegate<T>
@@ -37,9 +37,9 @@ public class SPCProcessControllerDecoder<T: Decodable>: _SPCBaseController {
 	private func generateTypedObjectJSON(_ data: Data) {
 		do {
 			let obj = try SPCProcessControllerDecoder<T>.jsonDecoder.decode(T.self, from: data)
-			delegate.stdoutHandler(SPCStreamingResult.object(output: obj))
+			delegate.stdoutHandler(SPCDecodedResult.object(output: obj))
 		} catch {
-			delegate.stdoutHandler(SPCStreamingResult.error(rawData: data, decodingError: error))
+			delegate.stdoutHandler(SPCDecodedResult.error(rawData: data, decodingError: error))
 		}
 	}
 	
@@ -48,9 +48,9 @@ public class SPCProcessControllerDecoder<T: Decodable>: _SPCBaseController {
 	private func generateTypedObjectPropertyList(_ data: Data) {
 		do {
 			let obj = try SPCProcessControllerDecoder<T>.plistDecoder.decode(T.self, from: data)
-			delegate.stdoutHandler(SPCStreamingResult.object(output: obj))
+			delegate.stdoutHandler(SPCDecodedResult.object(output: obj))
 		} catch {
-			delegate.stdoutHandler(SPCStreamingResult.error(rawData: data, decodingError: error))
+			delegate.stdoutHandler(SPCDecodedResult.error(rawData: data, decodingError: error))
 		}
 	}
 	

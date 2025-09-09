@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		ED1C0D6F2E6FE27200F001A4 /* SPCDecodedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1C0D6E2E6FE27200F001A4 /* SPCDecodedResult.swift */; };
 		ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165762DEF796200D54348 /* PublicTypes.swift */; };
 		ED5165792DEF7A0F00D54348 /* SPCProcessRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* SPCProcessRunner.swift */; };
 		ED6910E72E59398800511440 /* SPCProcessDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910E62E59398800511440 /* SPCProcessDelegate.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		ED1C0D6E2E6FE27200F001A4 /* SPCDecodedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCDecodedResult.swift; sourceTree = "<group>"; };
 		ED5165762DEF796200D54348 /* PublicTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTypes.swift; sourceTree = "<group>"; };
 		ED5165782DEF7A0C00D54348 /* SPCProcessRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessRunner.swift; sourceTree = "<group>"; };
 		ED6910E62E59398800511440 /* SPCProcessDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessDelegate.swift; sourceTree = "<group>"; };
@@ -96,6 +98,7 @@
 				EDB418492DEF759A005DF93C /* SPCProcessController.swift */,
 				EDED9B902DFCF2B500D59E80 /* SPCProcessControllerDecoder.swift */,
 				ED7D6BE22DF25E9B000DDEAF /* SPCProcessResult.swift */,
+				ED1C0D6E2E6FE27200F001A4 /* SPCDecodedResult.swift */,
 				ED5165762DEF796200D54348 /* PublicTypes.swift */,
 				ED6910EC2E594BA500511440 /* SPCSignalError.swift */,
 				EDB418482DEF759A005DF93C /* SwiftProcessController.docc */,
@@ -240,6 +243,7 @@
 				ED6910E72E59398800511440 /* SPCProcessDelegate.swift in Sources */,
 				ED6910ED2E594BA500511440 /* SPCSignalError.swift in Sources */,
 				ED6910E92E594B6A00511440 /* _SPCBaseController.swift in Sources */,
+				ED1C0D6F2E6FE27200F001A4 /* SPCDecodedResult.swift in Sources */,
 				ED6910EB2E594B8700511440 /* Extensions.swift in Sources */,
 				ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */,
 				EDB4184D2DEF759A005DF93C /* SPCProcessController.swift in Sources */,

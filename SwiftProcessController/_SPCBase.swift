@@ -72,6 +72,13 @@ public class _SPCBase {
 		return false
 	}
 	
+	/// Sends a `SIGINT` to the running process, if it exists.
+	public func interrupt() {
+		if let currentlyRunningProcess {
+			currentlyRunningProcess.interrupt()
+		}
+	}
+	
 	/// Sends a `SIGTERM` to the running process, if it exists.
 	public func terminate() {
 		if let currentlyRunningProcess {

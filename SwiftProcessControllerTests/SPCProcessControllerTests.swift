@@ -1,12 +1,12 @@
 //
-//  ProcessControllerTests.swift
+//  SPCProcessControllerTests.swift
 //  SwiftProcessController
 //
 
 import XCTest
 @testable import SwiftProcessController
 
-final class ProcessControllerTests: XCTestCase {
+final class SPCProcessControllerTests: XCTestCase {
 	class ResultTester: SPCProcessDelegate {
 		var out = String()
 		func stdoutHandler(_ output: Data) {

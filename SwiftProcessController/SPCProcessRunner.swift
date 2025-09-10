@@ -40,7 +40,7 @@ public class SPCProcessRunner: _SPCBase {
 	///   - returning: The object type to return.
 	///   - decodingWith: The type of decoder to use.
 	/// - Returns: A process result which contains the output, standard error, and exit status of the program.
-	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCProcessResultDecoder) throws -> SPCProcessResultDecoded<T> {
+	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCResultDecoderType) throws -> SPCProcessResultDecoded<T> {
 		let result = try run(args: args)
 		let obj = SPCDecodedResult.init(data: result.output, decoder: decodingWith, type: T.self)
 		return SPCProcessResultDecoded(output: obj, stdError: result.stdError, exitStatus: result.exitStatus)

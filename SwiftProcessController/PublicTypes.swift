@@ -13,7 +13,7 @@ public enum ProcessControllerError: Error {
 	case couldNotDecodeJSON(String, String)
 }
 
-public enum SPCProcessResultDecoder {
+public enum SPCResultDecoderType {
 	case JSON
 	case PropertyList
 }

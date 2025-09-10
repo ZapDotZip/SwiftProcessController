@@ -83,7 +83,14 @@ final class ProcessRunnerTests: XCTestCase {
 		let testOutput = DecodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test\nmultiline\nstring"], arr: [true, false, true, true, false])
 		let run = SPCProcessRunner(executablePath: "/bin/echo")
 		let res = try run.run(args: [String(data: JSONEncoder().encode(testOutput), encoding: .utf8)!], returning: DecodableJSON.self, decodingWith: .JSON)
-		XCTAssertEqual(res.output, testOutput)
+		
+		switch res.output {
+			case .object(let output):
+				XCTAssertEqual(output, testOutput)
+			case .error(let rawData, let decodingError):
+				XCTFail("Failed to decode \(String(data: rawData, encoding: .utf8) ?? decodingError.localizedDescription)")
+		}
+		
 	}
 	
 	func testCurrentDirectory() throws {

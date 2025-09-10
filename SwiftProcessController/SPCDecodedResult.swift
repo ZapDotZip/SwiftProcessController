@@ -14,7 +14,7 @@ public enum SPCDecodedResult<D: Decodable> {
 	/// - Parameter decodingError: The error that occured while trying to decode the data.
 	case error(rawData: Data, decodingError: Error)
 	
-	init(data: Data, decoder: SPCProcessResultDecoder, type: D.Type) {
+	init(data: Data, decoder: SPCResultDecoderType, type: D.Type) {
 		do {
 			switch decoder {
 				case .JSON: self = .object(output: try _SPCBase.jsonDecoder.decode(D.self, from: data))

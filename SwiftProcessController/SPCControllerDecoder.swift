@@ -36,7 +36,7 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	
 	/// Repeatedly called to append new data to partial data, then splits the data as necessary to call the object handler.
 	/// - Parameter data: The new data to add.
-	func read(_ data: Data) {
+	private func read(_ data: Data) {
 		partial.append(data)
 		var splits = partial.split(separator: separator)
 		if partial.last != separator {

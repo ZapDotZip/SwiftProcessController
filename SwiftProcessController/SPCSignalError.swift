@@ -14,14 +14,10 @@ public enum SPCSignalError: Error {
 	case unknownError(Int32)
 	public init(errCode: Int32) {
 		switch errCode {
-		case EINVAL:
-			self = .invalid
-		case EPERM:
-			self = .incorrectPermissions
-		case ESRCH:
-			self = .processDoesNotExists
-		default:
-			self = .unknownError(errCode)
+			case EINVAL: self = .invalid
+			case EPERM: self = .incorrectPermissions
+			case ESRCH: self = .processDoesNotExists
+			default: self = .unknownError(errCode)
 		}
 	}
 	

@@ -22,7 +22,7 @@ public class _SPCBase {
 	/// The currently running process, if there is one.
 	/// > Warning: Avoid working with this object directly, if possible.
 	public var currentlyRunningProcess: Process?
-	var isSuspended: Bool = false
+	internal var isSuspended: Bool = false
 	
 	/// The state of the process.
 	public var processState: ProcessState {
@@ -40,11 +40,11 @@ public class _SPCBase {
 	internal static let plistDecoder = PropertyListDecoder()
 	
 	
-	init(executableURL: URL) {
+	internal init(executableURL: URL) {
 		self.executableURL = executableURL
 	}
 	
-	convenience init(executablePath: String) {
+	internal convenience init(executablePath: String) {
 		self.init(executableURL: URL(localPath: executablePath))
 	}
 	
@@ -93,12 +93,12 @@ public class _SPCBase {
 	}
 	
 	/// Kills the process via `SIGKILL`.
-	public func kill() throws {
+	public func kill() throws(SPCSignalError) {
 		try signal(signal: SIGKILL)
 	}
 	
 	/// Kills the process via `SIGKILL`, waiting for the process to exit before returning.
-	public func killAndWaitForExit() throws {
+	public func killAndWaitForExit() throws(SPCSignalError) {
 		try kill()
 		currentlyRunningProcess?.waitUntilExit()
 	}
@@ -121,7 +121,7 @@ public class _SPCBase {
 	///   - standardError: Pipe for the process's error
 	///   - args: Process arguments
 	/// - Returns: New Process object
-	func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
+	internal func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
 		let proc = Process()
 		proc.executableURL = executableURL
 		proc.standardOutput = standardOutput

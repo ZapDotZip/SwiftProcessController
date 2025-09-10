@@ -12,6 +12,7 @@ public enum SPCSignalError: Error {
 	case incorrectPermissions
 	case processDoesNotExists
 	case unknownError(Int32)
+	
 	public init(errCode: Int32) {
 		switch errCode {
 			case EINVAL: self = .invalid
@@ -33,4 +34,5 @@ public enum SPCSignalError: Error {
 			return NSLocalizedString("An unknown error was received: \(unknown)", comment: "An unknown error was received")
 		}
 	}
+	
 }

@@ -1,11 +1,11 @@
 //
-//  SPCProcessRunner.swift
+//  SPCRunner.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
-public class SPCProcessRunner: _SPCBase {
+public class SPCRunner: _SPCBase {
 	
 	public override init(executableURL: URL) {
 		super.init(executableURL: executableURL)
@@ -16,9 +16,9 @@ public class SPCProcessRunner: _SPCBase {
 	}
 	
 	// MARK: Run
-	/// Runs with the provided arguments and returns the process output as an SPCProcessResult.
+	/// Runs with the provided arguments and returns the process output as an ``SPCResult``.
 	/// - Parameter args: The list of arguments to use.
-	public func run(args: [String]) throws -> SPCProcessResult {
+	public func run(args: [String]) throws -> SPCResult {
 		
 		let standardOut = Pipe()
 		let standardErr = Pipe()
@@ -31,7 +31,7 @@ public class SPCProcessRunner: _SPCBase {
 		let err = standardErr.fileHandleForReading.readDataToEndOfFile()
 		proc.waitUntilExit()
 		currentlyRunningProcess = nil
-		return SPCProcessResult(output: out, stdError: err, exitStatus: proc.terminationStatus)
+		return SPCResult(output: out, stdError: err, exitStatus: proc.terminationStatus)
 	}
 	
 	/// Runs with the provided arguments and returns the output as the provided Decodable class and stderr as a String, if any.
@@ -40,10 +40,10 @@ public class SPCProcessRunner: _SPCBase {
 	///   - returning: The object type to return.
 	///   - decodingWith: The type of decoder to use.
 	/// - Returns: A process result which contains the output, standard error, and exit status of the program.
-	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCResultDecoderType) throws -> SPCProcessResultDecoded<T> {
+	public func run<T: Decodable>(args: [String], returning: T.Type, decodingWith: SPCResultDecoderType) throws -> SPCResultDecoded<T> {
 		let result = try run(args: args)
 		let obj = SPCDecodedResult.init(data: result.output, decoder: decodingWith, type: T.self)
-		return SPCProcessResultDecoded(output: obj, stdError: result.stdError, exitStatus: result.exitStatus)
+		return SPCResultDecoded(output: obj, stdError: result.stdError, exitStatus: result.exitStatus)
 	}
 	
 }

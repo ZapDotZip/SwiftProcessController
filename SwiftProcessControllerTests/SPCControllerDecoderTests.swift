@@ -16,7 +16,7 @@ final class SPCControllerDecoderTests: XCTestCase {
 	let jsonEncoder = JSONEncoder()
 	let plistEncoder = PropertyListEncoder()
 	
-	class TestDelegate: SPCProcessDecoderDelegate {
+	class TestDelegate: SPCDecoderDelegate {
 		typealias D = SPCControllerDecoderTests.DecodableObj
 		
 		var results: [DecodableObj] = []
@@ -93,7 +93,7 @@ final class SPCControllerDecoderTests: XCTestCase {
 	
 	func testSimplePlist() throws {
 		let d = TestDelegate()
-		let pc = SPCControllerDecoder.init(executablePath: "/usr/bin/printf", delegate: d, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
+		let pc = SPCControllerDecoder.init(executablePath: "/usr/bin/printf", delegate: d, decoderType: .PropertyList, separator: SPCController.separatorNulChar)
 		let testResult = DecodableObj(id: 0, value: "abc")
 		var encoded: Data = try plistEncoder.encode(testResult)
 		encoded.append(Data("\\0".utf8))
@@ -104,7 +104,7 @@ final class SPCControllerDecoderTests: XCTestCase {
 	
 	func testSimplePlistNoLineEnding() throws {
 		let d = TestDelegate()
-		let pc = SPCControllerDecoder.init(executablePath: "/usr/bin/printf", delegate: d, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
+		let pc = SPCControllerDecoder.init(executablePath: "/usr/bin/printf", delegate: d, decoderType: .PropertyList, separator: SPCController.separatorNulChar)
 		let testResult = DecodableObj(id: 0, value: "abc")
 		try pc.launchAndWaitUntilExit(args: [String(data: plistEncoder.encode(testResult), encoding: .utf8)!])
 		XCTAssertEqual(d.exitCode, 0)
@@ -114,7 +114,7 @@ final class SPCControllerDecoderTests: XCTestCase {
 	@available(macOS 10.15.4, *)
 	func testPlistManyLines() throws {
 		let d = TestDelegate()
-		let pc = SPCControllerDecoder.init(executablePath: "/bin/sh", delegate: d, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
+		let pc = SPCControllerDecoder.init(executablePath: "/bin/sh", delegate: d, decoderType: .PropertyList, separator: SPCController.separatorNulChar)
 		let stdin = Pipe()
 		pc.standardInput = stdin
 		let TEST_COUNT = 1_000
@@ -144,7 +144,7 @@ final class SPCControllerDecoderTests: XCTestCase {
 	func testPlistPerformance() {
 		self.measure {
 			let d = TestDelegate()
-			let pc = SPCControllerDecoder.init(executablePath: "/bin/sh", delegate: d, decoderType: .PropertyList, separator: SPCProcessController.separatorNulChar)
+			let pc = SPCControllerDecoder.init(executablePath: "/bin/sh", delegate: d, decoderType: .PropertyList, separator: SPCController.separatorNulChar)
 			let testCount = 1_250
 			dispatchQueue.async { [self] in
 				let procstdin = Pipe()

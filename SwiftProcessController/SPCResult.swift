@@ -1,12 +1,12 @@
 //
-//  SPCProcessResult.swift
+//  SPCResult.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
 /// Contains the output, standard error, and exit status of the program.
-public struct SPCProcessResult {
+public struct SPCResult {
 	/// The output of the program.
 	public let output: Data
 	/// The standard error of the program.
@@ -23,7 +23,8 @@ public struct SPCProcessResult {
 	}
 }
 
-public struct SPCProcessResultDecoded<D: Decodable> {
+/// A struct consisting of the process's result, standard error, and exit status.
+public struct SPCResultDecoded<D: Decodable> {
 	/// The output of the program.
 	public let output: SPCDecodedResult<D>
 	/// The standard error of the program.

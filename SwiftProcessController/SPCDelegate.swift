@@ -1,12 +1,12 @@
 //
-//  SPCProcessDelegate.swift
+//  SPCDelegate.swift
 //  SwiftProcessController
 //
 
 import Foundation
 
 /// A protocol that is called when a Process emits processable data, or exits.
-public protocol SPCProcessDelegate {
+public protocol SPCDelegate {
 	/// Repeatedly called when new data is present in the process's `stdout`
 	func stdoutHandler(_: Data)
 	/// Repeatedly called when new data is present in the process's `stderr`
@@ -17,7 +17,7 @@ public protocol SPCProcessDelegate {
 }
 
 /// A protocol that is called when a Process emits processable data, or exits.
-public protocol SPCProcessDecoderDelegate<D> {
+public protocol SPCDecoderDelegate<D> {
 	associatedtype D: Decodable
 	/// Repeatedly called when new data is present in the process's `stdout`
 	func stdoutHandler(_: SPCDecodedResult<D>)

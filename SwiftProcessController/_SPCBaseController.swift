@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// A base class to hold functionailty for SPCProcessController.
+/// A base class to hold functionailty for SPCController.
 /// > Warning: Do not use directly.
 public class _SPCBaseController: _SPCBase {
 	public static let separatorNewLine: UInt8 = 0x0A

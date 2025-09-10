@@ -20,7 +20,7 @@ final class SPCBaseProcessStateTests: XCTestCase {
 	let dispatchQueue = DispatchQueue(label: "test")
 	
 	func testSuspendResume() throws {
-		let run = SPCProcessRunner(executablePath: "/bin/cat")
+		let run = SPCRunner(executablePath: "/bin/cat")
 		let stdin = Pipe()
 		run.standardInput = stdin
 		XCTAssertEqual(run.isSuspended, false)
@@ -50,7 +50,7 @@ final class SPCBaseProcessStateTests: XCTestCase {
 	}
 	
 	func testSignals() throws {
-		let run = SPCProcessRunner(executablePath: "/bin/cat")
+		let run = SPCRunner(executablePath: "/bin/cat")
 		let stdin = Pipe()
 		run.standardInput = stdin
 		XCTAssertEqual(run.isSuspended, false)

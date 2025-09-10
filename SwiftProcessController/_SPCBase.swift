@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// A base class to hold functionailty for both `ProcessRunner` and `SPCProcessController`.
+/// A base class to hold functionailty for both ``SPCRunner`` and ``SPCController``.
 /// > Warning: Do not use directly.
 public class _SPCBase {
 	/// The location of the binary to execute.

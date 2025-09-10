@@ -7,7 +7,7 @@ import XCTest
 @testable import SwiftProcessController
 
 final class SPCProcessControllerTests: XCTestCase {
-	class ResultTester: SPCProcessDelegate {
+	class ResultTester: SPCDelegate {
 		var out = String()
 		func stdoutHandler(_ output: Data) {
 			if let newData = String(data: output, encoding: .ascii) {
@@ -38,7 +38,7 @@ final class SPCProcessControllerTests: XCTestCase {
 	
 	func testSimple() throws {
 		let result = ResultTester()
-		let pc = SPCProcessController(executablePath: "/usr/bin/printf", delegate: result)
+		let pc = SPCController(executablePath: "/usr/bin/printf", delegate: result)
 		try pc.launchAndWaitUntilExit(args: ["testing"])
 		XCTAssertEqual(result.exitCode, 0)
 		XCTAssertEqual(result.out, "testing")
@@ -47,7 +47,7 @@ final class SPCProcessControllerTests: XCTestCase {
 	
 	func testSimpleExitCode() throws {
 		let result = ResultTester()
-		let pc = SPCProcessController(executablePath: "/usr/bin/false", delegate: result)
+		let pc = SPCController(executablePath: "/usr/bin/false", delegate: result)
 		try pc.launchAndWaitUntilExit(args: [])
 		XCTAssertEqual(result.exitCode, 1)
 		XCTAssertEqual(result.out.count, 0)
@@ -57,7 +57,7 @@ final class SPCProcessControllerTests: XCTestCase {
 	@available(macOS 10.15.4, *)
 	func testMultiLine() throws {
 		let result = ResultTester()
-		let pc = SPCProcessController(executablePath: "/bin/cat", delegate: result)
+		let pc = SPCController(executablePath: "/bin/cat", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		let inputArr = (1...100).map { i in
@@ -81,7 +81,7 @@ final class SPCProcessControllerTests: XCTestCase {
 	@available(macOS 10.15.4, *)
 	func testSimpleCommand() throws {
 		let result = ResultTester()
-		let pc = SPCProcessController(executablePath: "/bin/sh", delegate: result)
+		let pc = SPCController(executablePath: "/bin/sh", delegate: result)
 		let standardInput = Pipe()
 		pc.standardInput = standardInput
 		dispatchQueue.async {
@@ -102,7 +102,7 @@ final class SPCProcessControllerTests: XCTestCase {
 	@available(macOS 10.15.4, *)
 	func testMultiLineWithError() throws {
 		let result = ResultTester()
-		let pc = SPCProcessController(executablePath: "/bin/sh", delegate: result)
+		let pc = SPCController(executablePath: "/bin/sh", delegate: result)
 		let input = Pipe()
 		pc.standardInput = input
 		var inResult = ""

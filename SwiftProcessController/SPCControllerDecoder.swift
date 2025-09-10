@@ -10,20 +10,20 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	public typealias TypedHandler = (SPCDecodedResult<T>) -> Void
 	public typealias ErrorHandler = (Error, Data) -> Void
 	
-	private let delegate: any SPCProcessDecoderDelegate<T>
+	private let delegate: any SPCDecoderDelegate<T>
 	private let separator: UInt8
 	private var decoder: SPCResultDecoderType
 	
 	private var partial = Data()
 	
-	public init(executableURL: URL, delegate: any SPCProcessDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
+	public init(executableURL: URL, delegate: any SPCDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
 		self.separator = separator
 		self.delegate = delegate
 		self.decoder = decoderType
 		super.init(executableURL: executableURL, stderrHandler: delegate.stderrHandler(_:), terminationHandler: delegate.terminationHandler(exitCode:))
 	}
 	
-	public convenience init(executablePath: String, delegate: any SPCProcessDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
+	public convenience init(executablePath: String, delegate: any SPCDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
 		self.init(executableURL: URL(localPath: executablePath), delegate: delegate, decoderType: decoderType, separator: separator)
 	}
 	

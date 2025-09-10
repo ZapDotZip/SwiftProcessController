@@ -5,7 +5,7 @@
 
 import Foundation
 
-/// Decoded object or error from attempted decoding of data.
+/// An enum consisting of the decoded object or an error from the failed attempt to decode the data.
 public enum SPCDecodedResult<D: Decodable> {
 	/// The decoded object.
 	case object(output: D)

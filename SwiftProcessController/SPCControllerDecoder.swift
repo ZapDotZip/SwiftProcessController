@@ -15,6 +15,7 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	private var decoder: SPCResultDecoderType
 	
 	private var partial = Data()
+	private let lock = NSLock()
 	
 	public init(executableURL: URL, delegate: any SPCDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
 		self.separator = separator
@@ -37,6 +38,14 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	/// Repeatedly called to append new data to partial data, then splits the data as necessary to call the object handler.
 	/// - Parameter data: The new data to add.
 	private func read(_ data: Data) {
+		if data.isEmpty {
+			lock.unlock()
+			return
+		}
+		if lock.try() {
+			NSLog("\(#fileID)#\(#function): Data was written to the pipe after it should have closed! This may result in corrupted output or object state.")
+			assertionFailure("\(#fileID)#\(#function): Data was written to the pipe after it should have closed! This may result in corrupted output or object state.")
+		}
 		partial.append(data)
 		var splits = partial.split(separator: separator)
 		if partial.last != separator {
@@ -53,6 +62,9 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	
 	/// Ensures the rest of the data is processed before exiting.
 	override func exitHandler(_ p: Process) {
+		if !lock.lock(before: Date().addingTimeInterval(30)) {
+			NSLog("\(#fileID)#\(#function): failed to acquire exit lock after 30 seconds!")
+		}
 		if partial.count != 0 {
 			generateTypedObject(partial)
 		}
@@ -72,6 +84,7 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
 		try startProcess(proc)
+		lock.lock()
 	}
 	
 	/// Starts the process, then waits for it to exit.

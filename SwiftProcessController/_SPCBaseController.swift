@@ -29,9 +29,7 @@ public class _SPCBaseController: _SPCBase {
 	/// Sets a read handler to repeatedly recieve data from a FileHandle
 	internal func setupReadHandler(fileHandle: FileHandle, handler: @escaping PipedDataHandler) {
 		fileHandle.readabilityHandler = { fileHandle in
-			if fileHandle.availableData.count > 0 {
-				handler(fileHandle.availableData)
-			}
+			handler(fileHandle.availableData)
 		}
 	}
 	

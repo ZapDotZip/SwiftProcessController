@@ -71,7 +71,7 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 		
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
-		try startProcess(proc: proc)
+		try startProcess(proc)
 	}
 	
 	/// Starts the process, then waits for it to exit.

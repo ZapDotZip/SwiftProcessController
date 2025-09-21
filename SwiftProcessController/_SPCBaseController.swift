@@ -37,7 +37,7 @@ public class _SPCBaseController: _SPCBase {
 	
 	/// Starts the process.
 	/// - Parameter proc: The process to start
-	internal func startProcess(proc: Process) throws {
+	internal func startProcess(_ proc: Process) throws {
 		try proc.run()
 		currentlyRunningProcess = proc
 	}

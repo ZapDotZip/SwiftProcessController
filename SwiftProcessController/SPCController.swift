@@ -39,7 +39,7 @@ public class SPCController: _SPCBaseController {
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
 		
-		try startProcess(proc: proc)
+		try startProcess(proc)
 	}
 	
 	/// Launches the command for monitoring. Returns when the process exits.

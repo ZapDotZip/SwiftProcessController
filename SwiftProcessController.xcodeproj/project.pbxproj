@@ -14,7 +14,7 @@
 		ED6910E92E594B6A00511440 /* _SPCBaseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910E82E594B6A00511440 /* _SPCBaseController.swift */; };
 		ED6910EB2E594B8700511440 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910EA2E594B8700511440 /* Extensions.swift */; };
 		ED6910ED2E594BA500511440 /* SPCSignalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910EC2E594BA500511440 /* SPCSignalError.swift */; };
-		ED7D6BE02DF23DFB000DDEAF /* ProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */; };
+		ED7D6BE02DF23DFB000DDEAF /* SPCProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */; };
 		ED7D6BE12DF23DFB000DDEAF /* SPCProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */; };
 		ED7D6BE32DF25E9E000DDEAF /* SPCResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BE22DF25E9B000DDEAF /* SPCResult.swift */; };
 		EDAE0FE32E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */; };
@@ -44,7 +44,7 @@
 		ED6910E82E594B6A00511440 /* _SPCBaseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _SPCBaseController.swift; sourceTree = "<group>"; };
 		ED6910EA2E594B8700511440 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		ED6910EC2E594BA500511440 /* SPCSignalError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCSignalError.swift; sourceTree = "<group>"; };
-		ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessRunnerTests.swift; sourceTree = "<group>"; };
+		ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessRunnerTests.swift; sourceTree = "<group>"; };
 		ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessControllerTests.swift; sourceTree = "<group>"; };
 		ED7D6BE22DF25E9B000DDEAF /* SPCResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCResult.swift; sourceTree = "<group>"; };
 		EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCBaseProcessStateTests.swift; sourceTree = "<group>"; };
@@ -79,8 +79,8 @@
 		ED7D6BDF2DF23DFB000DDEAF /* SwiftProcessControllerTests */ = {
 			isa = PBXGroup;
 			children = (
-				ED7D6BDD2DF23DFB000DDEAF /* ProcessRunnerTests.swift */,
 				EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */,
+				ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */,
 				ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */,
 				EDED9B8E2DF7DBE900D59E80 /* SPCControllerDecoderTests.swift */,
 			);
@@ -256,7 +256,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				ED7D6BE02DF23DFB000DDEAF /* ProcessRunnerTests.swift in Sources */,
+				ED7D6BE02DF23DFB000DDEAF /* SPCProcessRunnerTests.swift in Sources */,
 				EDAE0FE32E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift in Sources */,
 				ED7D6BE12DF23DFB000DDEAF /* SPCProcessControllerTests.swift in Sources */,
 				EDED9B8F2DF7DBE900D59E80 /* SPCControllerDecoderTests.swift in Sources */,
@@ -308,7 +308,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -374,7 +374,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -404,9 +404,9 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 37;
+				DYLIB_CURRENT_VERSION = 39;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EAGER_LINKING = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -438,9 +438,9 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 37;
+				DYLIB_CURRENT_VERSION = 39;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EAGER_LINKING = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -470,7 +470,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				EAGER_LINKING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -486,7 +486,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 37;
+				CURRENT_PROJECT_VERSION = 39;
 				EAGER_LINKING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;

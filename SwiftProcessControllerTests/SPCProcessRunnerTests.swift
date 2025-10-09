@@ -93,6 +93,28 @@ final class SPCProcessRunnerTests: XCTestCase {
 		
 	}
 	
+	func testInvalidJSON() throws {
+		struct DecodableJSON: Codable, Equatable {
+			let str: String
+			let number: Int
+			let fun_number: Double
+			let dict: [String : String]
+			let arr: [Bool]
+		}
+		let testOutput = DecodableJSON(str: "testing", number: 99, fun_number: 99.999, dict: ["fun_string" : "test"], arr: [true, false, true, true, false])
+		let run = SPCRunner(executablePath: "/usr/bin/printf")
+		let inputData: String = String(data: try! JSONEncoder().encode(testOutput), encoding: .utf8)!.replacingOccurrences(of: ":", with: "whoops")
+		let res = try run.run(args: [inputData], returning: DecodableJSON.self, decodingWith: .JSON)
+		
+		switch res.output {
+			case .object(let _):
+				XCTFail("Output should not be valid.")
+			case .error(let rawData, let decodingError):
+				XCTAssert(rawData == inputData.data(using: .utf8))
+		}
+		
+	}
+	
 	func testCurrentDirectory() throws {
 		let run = SPCRunner(executablePath: "/bin/pwd")
 		let res = try run.run(args: []).outputString()

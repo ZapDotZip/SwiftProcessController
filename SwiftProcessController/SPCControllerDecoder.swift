@@ -14,6 +14,8 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	private let separator: UInt8
 	private var decoder: SPCResultDecoderType
 	
+	/// This lock prevents the terminationHandler from running until all the data in `stdout` has been processed.
+	private let lock = DispatchSemaphore(value: 1)
 	private var partial = Data()
 	
 	public init(executableURL: URL, delegate: any SPCDecoderDelegate<T>, decoderType: SPCResultDecoderType, separator: UInt8 = separatorNewLine) {
@@ -42,13 +44,15 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 				generateTypedObject(partial)
 				partial = Data()
 			}
+			lock.signal()
 			return
 		}
 		partial.append(data)
 		var splits = partial.split(separator: separator)
+		// if the last byte is not the separator, then the last split is not a complete chunk of data
 		if partial.last != separator {
 			if let last = splits.popLast() {
-				partial = last
+				partial = last // save the incomplete chunk for later
 			}
 		} else {
 			partial = Data()
@@ -60,7 +64,9 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	
 	/// Ensures the rest of the data is processed before exiting.
 	override func exitHandler(_ p: Process) {
+		lock.wait()
 		super.exitHandler(p)
+		lock.signal()
 	}
 	
 	/// Starts the process and returns, letting it run in the background.
@@ -75,7 +81,13 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 		
 		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: self.read(_:))
 		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: self.stderrHandler)
-		try startProcess(proc)
+		lock.wait()
+		do {
+			try startProcess(proc)
+		} catch {
+			lock.signal()
+			throw error
+		}
 	}
 	
 	/// Starts the process, then waits for it to exit.
@@ -85,13 +97,6 @@ public class SPCControllerDecoder<T: Decodable>: _SPCBaseController {
 	public func launchAndWaitUntilExit(args: [String], standardInput: Pipe? = nil) throws {
 		try launch(args: args, standardInput: standardInput)
 		currentlyRunningProcess?.waitUntilExit()
-	}
-	
-	deinit {
-		if partial.count != 0 {
-			NSLog("\(#fileID)#\(#function): Found data that was never processed.")
-			assert(partial.count == 0)
-		}
 	}
 	
 }

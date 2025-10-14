@@ -1,12 +1,12 @@
 //
-//  SPCProcessControllerTests.swift
+//  SPCControllerTests.swift
 //  SwiftProcessController
 //
 
 import XCTest
 @testable import SwiftProcessController
 
-final class SPCProcessControllerTests: XCTestCase {
+final class SPCControllerTests: XCTestCase {
 	class ResultTester: SPCDelegate {
 		var out = String()
 		func stdoutHandler(_ output: Data) {
@@ -27,14 +27,6 @@ final class SPCProcessControllerTests: XCTestCase {
 	}
 	
 	let dispatchQueue = DispatchQueue(label: "test.async")
-	
-	override func setUpWithError() throws {
-		
-	}
-	
-	override func tearDownWithError() throws {
-		// Put teardown code here. This method is called after the invocation of each test method in the class.
-	}
 	
 	func testSimple() throws {
 		let result = ResultTester()

@@ -40,14 +40,6 @@ public class _SPCBaseController: _SPCBase {
 		currentlyRunningProcess = proc
 	}
 	
-	/// Starts the process and waits for it to exit.
-	/// - Parameter proc: The process to start
-	internal func startProcessAndWaitUntilExit(proc: Process) throws {
-		try proc.run()
-		currentlyRunningProcess = proc
-		proc.waitUntilExit()
-	}
-	
 	override func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
 		let proc = super.createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
 		proc.terminationHandler = exitHandler(_:)

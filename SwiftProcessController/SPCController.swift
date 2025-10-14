@@ -46,15 +46,8 @@ public class SPCController: _SPCBaseController {
 	/// - Parameter args: The list of arguments to use.
 	/// - Parameter standardInput: Standard input to use for the process.
 	public func launchAndWaitUntilExit(args: [String], standardInput: Pipe? = nil) throws {
-		let standardOutput = Pipe()
-		let standardError = Pipe()
-		
-		let proc = createProcessObject(standardOutput: standardOutput, standardError: standardError, args: args)
-		
-		setupReadHandler(fileHandle: standardOutput.fileHandleForReading, handler: delegate.stdoutHandler)
-		setupReadHandler(fileHandle: standardError.fileHandleForReading, handler: delegate.stderrHandler)
-		
-		try startProcessAndWaitUntilExit(proc: proc)
+		try launch(args: args, standardInput: standardInput)
+		currentlyRunningProcess?.waitUntilExit()
 	}
 	
 }

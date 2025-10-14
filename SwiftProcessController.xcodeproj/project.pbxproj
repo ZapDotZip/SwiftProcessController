@@ -16,7 +16,7 @@
 		ED6910EB2E594B8700511440 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910EA2E594B8700511440 /* Extensions.swift */; };
 		ED6910ED2E594BA500511440 /* SPCSignalError.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910EC2E594BA500511440 /* SPCSignalError.swift */; };
 		ED7D6BE02DF23DFB000DDEAF /* SPCProcessRunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */; };
-		ED7D6BE12DF23DFB000DDEAF /* SPCProcessControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */; };
+		ED7D6BE12DF23DFB000DDEAF /* SPCControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BDE2DF23DFB000DDEAF /* SPCControllerTests.swift */; };
 		ED7D6BE32DF25E9E000DDEAF /* SPCResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED7D6BE22DF25E9B000DDEAF /* SPCResult.swift */; };
 		EDAE0FE32E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */; };
 		EDB4184C2DEF759A005DF93C /* SwiftProcessController.docc in Sources */ = {isa = PBXBuildFile; fileRef = EDB418482DEF759A005DF93C /* SwiftProcessController.docc */; };
@@ -47,7 +47,7 @@
 		ED6910EA2E594B8700511440 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		ED6910EC2E594BA500511440 /* SPCSignalError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCSignalError.swift; sourceTree = "<group>"; };
 		ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessRunnerTests.swift; sourceTree = "<group>"; };
-		ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCProcessControllerTests.swift; sourceTree = "<group>"; };
+		ED7D6BDE2DF23DFB000DDEAF /* SPCControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCControllerTests.swift; sourceTree = "<group>"; };
 		ED7D6BE22DF25E9B000DDEAF /* SPCResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCResult.swift; sourceTree = "<group>"; };
 		EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCBaseProcessStateTests.swift; sourceTree = "<group>"; };
 		EDB418482DEF759A005DF93C /* SwiftProcessController.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = SwiftProcessController.docc; sourceTree = "<group>"; };
@@ -83,7 +83,7 @@
 			children = (
 				EDAE0FE22E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift */,
 				ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */,
-				ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */,
+				ED7D6BDE2DF23DFB000DDEAF /* SPCControllerTests.swift */,
 				EDED9B8E2DF7DBE900D59E80 /* SPCControllerDecoderTests.swift */,
 				ED2CB82C2E9EE308005DAF49 /* SPCIOPolicyTests.swift */,
 			);
@@ -262,7 +262,7 @@
 				ED2CB82D2E9EE308005DAF49 /* SPCIOPolicyTests.swift in Sources */,
 				ED7D6BE02DF23DFB000DDEAF /* SPCProcessRunnerTests.swift in Sources */,
 				EDAE0FE32E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift in Sources */,
-				ED7D6BE12DF23DFB000DDEAF /* SPCProcessControllerTests.swift in Sources */,
+				ED7D6BE12DF23DFB000DDEAF /* SPCControllerTests.swift in Sources */,
 				EDED9B8F2DF7DBE900D59E80 /* SPCControllerDecoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

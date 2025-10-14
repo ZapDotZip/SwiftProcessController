@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		ED1C0D6F2E6FE27200F001A4 /* SPCDecodedResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED1C0D6E2E6FE27200F001A4 /* SPCDecodedResult.swift */; };
+		ED2CB82D2E9EE308005DAF49 /* SPCIOPolicyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED2CB82C2E9EE308005DAF49 /* SPCIOPolicyTests.swift */; };
 		ED5165772DEF796500D54348 /* PublicTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165762DEF796200D54348 /* PublicTypes.swift */; };
 		ED5165792DEF7A0F00D54348 /* SPCRunner.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED5165782DEF7A0C00D54348 /* SPCRunner.swift */; };
 		ED6910E72E59398800511440 /* SPCDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED6910E62E59398800511440 /* SPCDelegate.swift */; };
@@ -38,6 +39,7 @@
 
 /* Begin PBXFileReference section */
 		ED1C0D6E2E6FE27200F001A4 /* SPCDecodedResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCDecodedResult.swift; sourceTree = "<group>"; };
+		ED2CB82C2E9EE308005DAF49 /* SPCIOPolicyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCIOPolicyTests.swift; sourceTree = "<group>"; };
 		ED5165762DEF796200D54348 /* PublicTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicTypes.swift; sourceTree = "<group>"; };
 		ED5165782DEF7A0C00D54348 /* SPCRunner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCRunner.swift; sourceTree = "<group>"; };
 		ED6910E62E59398800511440 /* SPCDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SPCDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				ED7D6BDD2DF23DFB000DDEAF /* SPCProcessRunnerTests.swift */,
 				ED7D6BDE2DF23DFB000DDEAF /* SPCProcessControllerTests.swift */,
 				EDED9B8E2DF7DBE900D59E80 /* SPCControllerDecoderTests.swift */,
+				ED2CB82C2E9EE308005DAF49 /* SPCIOPolicyTests.swift */,
 			);
 			path = SwiftProcessControllerTests;
 			sourceTree = "<group>";
@@ -256,6 +259,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ED2CB82D2E9EE308005DAF49 /* SPCIOPolicyTests.swift in Sources */,
 				ED7D6BE02DF23DFB000DDEAF /* SPCProcessRunnerTests.swift in Sources */,
 				EDAE0FE32E00C4EB00B5D0C6 /* SPCBaseProcessStateTests.swift in Sources */,
 				ED7D6BE12DF23DFB000DDEAF /* SPCProcessControllerTests.swift in Sources */,
@@ -308,7 +312,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -374,7 +378,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -404,9 +408,9 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 44;
+				DYLIB_CURRENT_VERSION = 82;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EAGER_LINKING = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -438,9 +442,9 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 44;
+				DYLIB_CURRENT_VERSION = 82;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				EAGER_LINKING = YES;
 				ENABLE_MODULE_VERIFIER = YES;
@@ -470,7 +474,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				EAGER_LINKING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
@@ -486,7 +490,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 44;
+				CURRENT_PROJECT_VERSION = 82;
 				EAGER_LINKING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;

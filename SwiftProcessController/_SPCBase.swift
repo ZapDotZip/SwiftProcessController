@@ -19,6 +19,28 @@ public class _SPCBase {
 	/// The quality of service to run the process with. Defaults to `QualityOfService.default`
 	public var qualityOfService: QualityOfService = .default
 	
+	/// The IO Policy controls how the OS handles disk access priority, similar to how `QualityOfService` controls CPU usage.
+	///
+	/// See the `setiopolicy_np` man page for information about each type, and the `taskpolicy` man page for more information.
+	public enum SPCIOPolicy {
+		case important, standard, utility, throttle, passive
+		internal func taskPolicyArgs() -> [String] {
+			switch self {
+			case .important: return ["-d", "important"]
+			case .standard: return ["-d", "standard"]
+			case .utility: return ["-d", "utility", "-g", "utility"]
+			case .throttle: return ["-d", "throttle", "-g", "throttle"]
+			case .passive: return ["-d", "passive"]
+			}
+		}
+	}
+	
+	/// The IO policy to set for the process. Defaults to `nil` which does not set a policy, and macOS sets the default to important.
+	///
+	/// When set, the process is run through `taskpolicy`.
+	public var ioPolicy: SPCIOPolicy?
+	private static let taskpolicyURL = URL(localPath: "/usr/sbin/taskpolicy")
+	
 	/// The currently running process, if there is one.
 	/// > Warning: Avoid working with this object directly, if possible.
 	public var currentlyRunningProcess: Process?
@@ -123,7 +145,18 @@ public class _SPCBase {
 	/// - Returns: New Process object
 	internal func createProcessObject(standardOutput: Pipe, standardError: Pipe, args: [String]) -> Process {
 		let proc = Process()
-		proc.executableURL = executableURL
+		
+		if let ioPolicy {
+			proc.executableURL = _SPCBase.taskpolicyURL
+			var args = ioPolicy.taskPolicyArgs()
+			args.append(executableURL.localPath)
+			args.append(contentsOf: args)
+			proc.arguments = args
+		} else {
+			proc.executableURL = executableURL
+			proc.arguments = args
+		}
+		
 		proc.standardOutput = standardOutput
 		proc.standardError = standardError
 		if standardInput != nil {
@@ -132,7 +165,6 @@ public class _SPCBase {
 		if currentDirectory != nil {
 			proc.currentDirectoryURL = currentDirectory
 		}
-		proc.arguments = args
 		if env != nil {
 			proc.environment = env
 		}

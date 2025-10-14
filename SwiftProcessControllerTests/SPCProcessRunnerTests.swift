@@ -107,10 +107,10 @@ final class SPCProcessRunnerTests: XCTestCase {
 		let res = try run.run(args: [inputData], returning: DecodableJSON.self, decodingWith: .JSON)
 		
 		switch res.output {
-			case .object(let _):
+			case .object( _):
 				XCTFail("Output should not be valid.")
 			case .error(let rawData, let decodingError):
-				XCTAssert(rawData == inputData.data(using: .utf8))
+				XCTAssert(rawData == inputData.data(using: .utf8), "Got error: \(decodingError)")
 		}
 		
 	}

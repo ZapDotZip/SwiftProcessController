@@ -148,10 +148,10 @@ public class _SPCBase {
 		
 		if let ioPolicy {
 			proc.executableURL = _SPCBase.taskpolicyURL
-			var args = ioPolicy.taskPolicyArgs()
-			args.append(executableURL.localPath)
-			args.append(contentsOf: args)
-			proc.arguments = args
+			var tpArgs = ioPolicy.taskPolicyArgs()
+			tpArgs.append(executableURL.localPath)
+			tpArgs.append(contentsOf: args)
+			proc.arguments = tpArgs
 		} else {
 			proc.executableURL = executableURL
 			proc.arguments = args
